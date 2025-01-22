@@ -61,6 +61,27 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        quiz: {
+          DEFAULT: 'hsl(var(--quiz))',
+          foreground: 'hsl(var(--quiz-foreground))',
+        },
+        'quiz-muted': {
+          DEFAULT: 'hsl(var(--quiz-muted))',
+          foreground: 'hsl(var(--quiz-muted-foreground))',
+        },
+        'quiz-blue': {
+          DEFAULT: 'hsl(var(--quiz-blue))',
+          foreground: 'hsl(var(--quiz-blue-foreground))',
+        },
+        'quiz-yellow': {
+          DEFAULT: 'hsl(var(--quiz-yellow))',
+          foreground: 'hsl(var(--quiz-yellow-foreground))',
+          border: 'hsl(var(--quiz-yellow-border))',
+        },
+        'quiz-white': {
+          DEFAULT: 'hsl(var(--quiz-white))',
+          foreground: 'hsl(var(--quiz-white-foreground))',
+        },
         sidebar: {
           DEFAULT: 'hsl(var(--sidebar-background))',
           foreground: 'hsl(var(--sidebar-foreground))',
@@ -99,6 +120,20 @@ export default {
           '0%,70%,100%': { opacity: '1' },
           '20%,50%': { opacity: '0' },
         },
+        shake: {
+          '10%, 90%': {
+            transform: 'translate3d(-1px, 0, 0)',
+          },
+          '20%, 80%': {
+            transform: 'translate3d(2px, 0, 0)',
+          },
+          '30%, 50%, 70%': {
+            transform: 'translate3d(-4px, 0, 0)',
+          },
+          '40%, 60%': {
+            transform: 'translate3d(4px, 0, 0)',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -106,8 +141,11 @@ export default {
         'content-show': 'content-show 0.2s ease-out',
         'content-hide': 'content-hide 0.2s ease-out',
         'caret-blink': 'caret-blink 1.25s ease-out infinite',
+        shake: 'shake 0.82s cubic-bezier(.36,.07,.19,.97) both',
       },
       fontFamily: {
+        display: ['Big Shoulders Text Variable'],
+        aleo: ['Aleo Variable'],
         //sans: ['Inter', ...fontFamily.sans],
       },
     },

@@ -78,6 +78,12 @@ importers:
 
   website:
     dependencies:
+      '@fontsource-variable/aleo':
+        specifier: ^5.1.1
+        version: 5.1.1
+      '@fontsource-variable/big-shoulders-text':
+        specifier: ^5.1.1
+        version: 5.1.1
       '@fontsource/inter':
         specifier: ^5.1.1
         version: 5.1.1
@@ -108,6 +114,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       lucide-solid:
         specifier: ^0.473.0
         version: 0.473.0(solid-js@1.9.4)
@@ -126,6 +135,9 @@ importers:
       solid-mdx:
         specifier: ^0.0.7
         version: 0.0.7(solid-js@1.9.4)(vite@4.5.5)
+      solid-sonner:
+        specifier: ^0.2.8
+        version: 0.2.8(solid-js@1.9.4)
       tailwind-merge:
         specifier: ^2.6.0
         version: 2.6.0
@@ -1529,6 +1541,14 @@ packages:
 
   /@floating-ui/utils@0.2.9:
     resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+    dev: false
+
+  /@fontsource-variable/aleo@5.1.1:
+    resolution: {integrity: sha512-7MvulegGMqbii7a2T9DMaGuTKsU5WzLtp4/zqeY6+jzglAaEraE7w3YQXQc9gZav3/sClDo1siFOpXpT47GvuA==}
+    dev: false
+
+  /@fontsource-variable/big-shoulders-text@5.1.1:
+    resolution: {integrity: sha512-es3XYOVPrYSutWd7UhGTAWsDOA1NrsHeDguhUPG2JItSrZHhSTpyFsZlknvU+gpLc9HFz+Wlu0r2FtkDizexLQ==}
     dev: false
 
   /@fontsource/inter@5.1.1:
@@ -3455,6 +3475,10 @@ packages:
     dependencies:
       '@babel/runtime': 7.26.0
     dev: true
+
+  /date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
+    dev: false
 
   /dax-sh@0.39.2:
     resolution: {integrity: sha512-gpuGEkBQM+5y6p4cWaw9+ePy5TNon+fdwFVtTI8leU3UhwhsBfPewRxMXGuQNC+M2b/MDGMlfgpqynkcd0C3FQ==}
@@ -6977,6 +7001,14 @@ packages:
       solid-js: 1.9.4
     transitivePeerDependencies:
       - supports-color
+
+  /solid-sonner@0.2.8(solid-js@1.9.4):
+    resolution: {integrity: sha512-EQ2EIznvHHpAmkYh2CTu0AdCgmPJRJWLGFRWygE8j+vMEfvIV2wotHU5qgWzqzVTG1SODGsay2Lwq6ENWx/rPA==}
+    peerDependencies:
+      solid-js: ^1.6.0
+    dependencies:
+      solid-js: 1.9.4
+    dev: false
 
   /solid-use@0.9.0(solid-js@1.9.4):
     resolution: {integrity: sha512-8TGwB4m3qQ7qKo8Lg0pi/ZyyGVmQIjC4sPyxRCH7VPds0BzSsT734PhP3jhR6zMJxoYHM+uoivjq0XdpzXeOJg==}

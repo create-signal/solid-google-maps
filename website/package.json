@@ -17,6 +17,8 @@
     "start": "vinxi start"
   },
   "dependencies": {
+    "@fontsource-variable/aleo": "^5.1.1",
+    "@fontsource-variable/big-shoulders-text": "^5.1.1",
     "@fontsource/inter": "^5.1.1",
     "@googlemaps/markerclusterer": "^2.5.1",
     "@kobalte/core": "^0.13.7",
@@ -27,12 +29,14 @@
     "@vinxi/plugin-mdx": "^3.7.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "lucide-solid": "^0.473.0",
     "remark-gfm": "3.0.1",
     "shiki": "0.14.5",
     "solid-google-maps": "workspace:*",
     "solid-js": "^1.9.2",
     "solid-mdx": "^0.0.7",
+    "solid-sonner": "^0.2.8",
     "tailwind-merge": "^2.6.0",
     "vinxi": "^0.4.3"
   },

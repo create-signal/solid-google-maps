@@ -76,6 +76,10 @@ export const docsConfig: Config = {
           title: 'SolidGuessr',
           href: '/examples/solidguessr',
         },
+        {
+          title: 'Country Quiz',
+          href: '/examples/quiz',
+        },
       ],
     },
   ],

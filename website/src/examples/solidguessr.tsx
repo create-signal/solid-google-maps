@@ -273,7 +273,7 @@ const GeoguessrGameView: Component = () => {
   })
 
   return (
-    <div class="flex flex-col w-full relative h-[calc(100vh-4rem)]">
+    <div class="flex flex-col w-full relative h-[calc(100vh-6rem)]">
       <Map
         id="streetview"
         class="h-full w-full grow"
