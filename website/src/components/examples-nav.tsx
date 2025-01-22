@@ -10,13 +10,13 @@ const examples = [
   {
     name: 'SolidGuessr',
     href: '/examples/solidguessr',
-    code: 'https://github.com/create-signal/solid-google-maps/tree/main/apps/docs/src/examples/solidguessr',
+    code: 'https://github.com/create-signal/solid-google-maps/blob/main/website/src/examples/solidguessr.tsx',
   },
-  {
+  /*{
     name: 'Country Quiz',
     href: '/examples/quiz',
-    code: 'https://github.com/create-signal/solid-google-maps/tree/main/apps/docs/src/examples/quiz',
-  },
+    code: 'https://github.com/create-signal/solid-google-maps/blob/main/website/src/examples/quiz.tsx',
+  },*/
 ]
 
 export function ExamplesNav(props: ComponentProps<'div'>) {
