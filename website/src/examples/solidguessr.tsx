@@ -160,14 +160,14 @@ const GeoguessrGameView: Component = () => {
             unit: 'm',
           }
         : distance < 10000
-          ? {
-              number: Math.round(distance / 10) / 100,
-              unit: 'km',
-            }
-          : {
-              number: Math.round(distance / 1000),
-              unit: 'km',
-            }
+        ? {
+            number: Math.round(distance / 10) / 100,
+            unit: 'km',
+          }
+        : {
+            number: Math.round(distance / 1000),
+            unit: 'km',
+          }
 
     return {
       distance: distanceUnit,
