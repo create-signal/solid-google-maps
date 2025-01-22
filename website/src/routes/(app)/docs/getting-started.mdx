@@ -1,0 +1,49 @@
+<MDXHeader title="Getting Started" description="Install and configure." />
+
+The easiest way to get started is to start with any of the examples in our [./examples folder](https://github.com/create-solid/solid-google-maps/tree/main/examples). Each of the examples is a standalone application using a vite development server that you can copy as a starting point.
+
+In order for this to work, an [API key for the Google Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/get-api-key) is required. For the examples, this key has to be provided via an environment variable VITE_GOOGLE_MAPS_API_KEY, for example by putting your key into a file named .env in the directory:
+
+<Steps>
+
+### Set up Environment Variables
+
+Add your Google Maps API key to the **`.env`** file in the root of your project. More details can be found in the [SolidStart documentation](https://docs.solidjs.com/configuration/environment-variables):
+
+```bash
+VITE_GOOGLE_MAPS_API_KEY=YOUR_API_KEY
+```
+
+### Install the Library
+
+The library can be installed from npm:
+
+```bash
+npm install solid-google-maps
+```
+
+### That's it
+
+You can now start adding components to your project.
+
+```tsx showLineNumbers
+import {Component} from 'solid-js';
+import {APIProvider, Map} from 'solid-google-maps';
+
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
+const App: Component = () => (
+    <APIProvider apiKey={API_KEY}>
+        <Map
+            style={{width: '100vw', height: '100vh'}}
+            defaultCenter={{lat: 22.54992, lng: 0}}
+            defaultZoom={3}
+            gestureHandling={'greedy'}
+            disableDefaultUI={true}
+        />
+    </APIProvider>
+);
+
+```
+
+</Steps>

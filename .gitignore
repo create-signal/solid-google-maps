@@ -1,0 +1,20 @@
+.DS_Store
+.idea
+.env
+.env.local
+.env.development
+.env.development.local
+*.log
+
+.vercel/
+.turbo/
+.next/
+.yalc/
+build/
+dist/
+node_modules/
+.vercel
+test-results/
+
+# tsup
+tsup.config.bundled_*.{m,c,}s

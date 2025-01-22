@@ -1,0 +1,32 @@
+<MDXHeader
+  title="Marker Clustering"
+  description="A filterable list of markers that are clustered together."
+/>
+
+
+<ComponentPreview name="marker-clustering" />
+
+## About
+
+Marker Clustering requires an additional dependency [@googlemaps/markerclusterer](https://www.npmjs.com/package/@googlemaps/markerclusterer).
+
+## Installation
+
+```bash
+npm i @googlemaps/markerclusterer
+```
+
+## SolidStart
+
+@googlemaps/markerclusterer is a CommonJS module and may cause issues with SolidStart. To fix this, add the following to your `app.config.ts`:
+
+```ts {3-7}
+export default defineConfig({
+  ...,
+  vite: {
+    ssr: {
+      noExternal: ['@googlemaps/markerclusterer']
+    }
+  }
+})
+```

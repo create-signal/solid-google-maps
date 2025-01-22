@@ -1,0 +1,101 @@
+<MDXHeader
+  title="Markers & Infowindows"
+  description="A basic Google Map with default Zoom and Center."
+/>
+
+<ComponentPreview name="markers-and-infowindows" />
+
+## Basic Marker
+
+```tsx
+import {
+  Marker
+} from "solid-google-maps"
+```
+
+```tsx
+<Marker
+    position={{ lat: 10, lng: 10 }}
+    clickable={true}
+    onClick={() => alert('marker was clicked!')}
+    title={'clickable google.maps.Marker'}
+  />
+```
+
+## Customized Pin
+
+```tsx
+import {
+  AdvancedMarker, Pin
+} from "solid-google-maps"
+```
+
+```tsx
+<AdvancedMarker position={{ lat: 20, lng: 10 }} title={'AdvancedMarker with customized pin.'}>
+  <Pin background={'#22ccff'} borderColor={'#1e89a1'} glyphColor={'#0f677a'}></Pin>
+</AdvancedMarker>
+```
+
+## HTML Marker
+
+```tsx
+<AdvancedMarker position={{ lat: 30, lng: 10 }} title={'AdvancedMarker with custom html content.'}>
+  <div
+    style={{
+      width: '16px',
+      height: '16px',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      background: '#1dbe80',
+      border: '2px solid #0e6443',
+      'border-radius': '50%',
+      transform: 'translate(-50%, -50%)',
+    }}
+  ></div>
+</AdvancedMarker>
+```
+
+## Infowindow
+
+```tsx
+<InfoWindow position={{ lat: 40, lng: 0 }} maxWidth={200} open={true}>
+  <p>
+    This is the content for another infowindow with <em>HTML</em>
+    -elements.
+  </p>
+</InfoWindow>
+```
+
+## Controlled Marker position
+
+```tsx
+import { createSignal } from "solid-js"
+import { Marker } from "solid-google-maps"
+```
+
+```tsx
+const [position, setPosition] = createSignal({ lat: 50, lng: 10 })
+
+<Marker
+  position={position()}
+/> 
+```
+
+## Marker with Infowindow
+
+```tsx
+import { AdvancedMarker, InfoWindow } from "solid-google-maps"
+```
+
+```tsx
+const [infoWindowOpen, setInfoWindowOpen] = createSignal(false)
+
+<AdvancedMarker
+  position={{ lat: 60, lng: 10 }}
+  onClick={() => setInfoWindowOpen(!infoWindowOpen())}
+>
+  <InfoWindow open={infoWindowOpen()} onOpenChange={setInfoWindowOpen}>
+    This is the content for an infowindow.
+  </InfoWindow>
+</AdvancedMarker>

@@ -1,0 +1,50 @@
+{
+  "name": "solid-google-maps",
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepublishOnly": "cp ../README.md . && pnpm build",
+    "postpublish": "rm README.md",
+    "build": "tsup src",
+    "dev": "tsup src --watch"
+  },
+  "peerDependencies": {
+    "solid-js": "^1.8.0"
+  },
+  "dependencies": {
+    "@types/google.maps": "^3.55.11",
+    "fast-deep-equal": "^3.1.3"
+  },
+  "devDependencies": {
+    "solid-js": "^1.8"
+  },
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/create-signal/solid-google-maps.git"
+  },
+  "bugs": {
+    "url": "https://github.com/create-signal/solid-google-maps/issues"
+  },
+  "homepage": "https://github.com/create-signal/solid-google-maps#readme",
+  "author": {
+    "name": "Kieran Molloy",
+    "url": "https://github.com/create-signal"
+  },
+  "browser": {},
+  "typesVersions": {},
+  "type": "module",
+  "exports": {
+    "solid": "./dist/index.jsx",
+    "import": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  }
+}
