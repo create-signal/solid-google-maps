@@ -22,16 +22,8 @@ export const docsConfig: Config = {
       href: '/docs/introduction',
     },
     {
-      title: 'Components',
-      href: '/docs/examples/accordion',
-    },
-    {
       title: 'Examples',
-      href: '/examples/cards',
-    },
-    {
-      title: 'Blocks',
-      href: '/blocks',
+      href: '/examples/solidguessr',
     },
   ],
   sidebarNav: [

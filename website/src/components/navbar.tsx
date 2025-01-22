@@ -34,7 +34,7 @@ export default function Navbar() {
               Docs
             </A>
             <A
-              href="/docs/examples/basic-map"
+              href="/examples/solidguessr"
               class={cn(
                 'transition-colors hover:text-foreground/80',
                 pathname().startsWith('/docs/components') ? 'text-foreground' : 'text-foreground/80',

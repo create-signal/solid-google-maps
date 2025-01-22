@@ -7,7 +7,7 @@ interface ComponentPreviewProps extends ComponentProps<'div'> {
   name: string
   source: string
   align?: 'center' | 'start' | 'end'
-  type?: 'block' | 'component' | 'example'
+  type?: 'component' | 'example'
 }
 
 const ComponentPreview: Component<ComponentPreviewProps> = (rawProps) => {
@@ -29,16 +29,6 @@ const ComponentPreview: Component<ComponentPreviewProps> = (rawProps) => {
 
     return <Component />
   })
-
-  if (local.type === 'block') {
-    return (
-      <div class="relative aspect-[4/2.5] w-full overflow-hidden rounded-md border">
-        <div class="absolute inset-0 hidden w-[1600px] bg-background md:block">
-          <iframe src={`/blocks/${local.name}`} class="size-full" />
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div class={cn('group relative my-4 flex flex-col space-y-2', local.class)} {...others}>
