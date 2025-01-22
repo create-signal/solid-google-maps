@@ -1,5 +1,5 @@
 import { Marker, MarkerClusterer } from '@googlemaps/markerclusterer'
-import { AdvancedMarker, APIProvider, InfoWindow, Map, useMap } from 'solid-google-maps/dist'
+import { AdvancedMarker, APIProvider, InfoWindow, Map, useMap } from 'solid-google-maps'
 import { Component, createDeferred, createEffect, createMemo, createSignal, For, JSX, Show, untrack } from 'solid-js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'

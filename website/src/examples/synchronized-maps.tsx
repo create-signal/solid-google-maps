@@ -1,4 +1,4 @@
-import { APIProvider, MapCameraProps, Map, MapCameraChangedEvent } from 'solid-google-maps/dist'
+import { APIProvider, MapCameraProps, Map, MapCameraChangedEvent } from 'solid-google-maps'
 import { createSignal, For } from 'solid-js'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY

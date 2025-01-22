@@ -1,33 +1,26 @@
-<MDXHeader
-  title="Markers & Infowindows"
-  description="A basic Google Map with default Zoom and Center."
-/>
+<MDXHeader title="Markers & Infowindows" description="A basic Google Map with default Zoom and Center." />
 
 <ComponentPreview name="markers-and-infowindows" />
 
 ## Basic Marker
 
 ```tsx
-import {
-  Marker
-} from "solid-google-maps"
+import { Marker } from 'solid-google-maps'
 ```
 
 ```tsx
 <Marker
-    position={{ lat: 10, lng: 10 }}
-    clickable={true}
-    onClick={() => alert('marker was clicked!')}
-    title={'clickable google.maps.Marker'}
-  />
+  position={{ lat: 10, lng: 10 }}
+  clickable={true}
+  onClick={() => alert('marker was clicked!')}
+  title={'clickable google.maps.Marker'}
+/>
 ```
 
 ## Customized Pin
 
 ```tsx
-import {
-  AdvancedMarker, Pin
-} from "solid-google-maps"
+import { AdvancedMarker, Pin } from 'solid-google-maps'
 ```
 
 ```tsx
@@ -70,8 +63,8 @@ import {
 ## Controlled Marker position
 
 ```tsx
-import { createSignal } from "solid-js"
-import { Marker } from "solid-google-maps"
+import { createSignal } from 'solid-js'
+import { Marker } from 'solid-google-maps'
 ```
 
 ```tsx
@@ -79,13 +72,13 @@ const [position, setPosition] = createSignal({ lat: 50, lng: 10 })
 
 <Marker
   position={position()}
-/> 
+/>
 ```
 
 ## Marker with Infowindow
 
 ```tsx
-import { AdvancedMarker, InfoWindow } from "solid-google-maps"
+import { AdvancedMarker, InfoWindow } from 'solid-google-maps'
 ```
 
 ```tsx
@@ -99,3 +92,4 @@ const [infoWindowOpen, setInfoWindowOpen] = createSignal(false)
     This is the content for an infowindow.
   </InfoWindow>
 </AdvancedMarker>
+```

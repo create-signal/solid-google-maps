@@ -1,4 +1,4 @@
-import { AdvancedMarker, APIProvider, InfoWindow, Map, Marker, Pin } from 'solid-google-maps/dist'
+import { AdvancedMarker, APIProvider, InfoWindow, Map, Marker, Pin } from 'solid-google-maps'
 import { Component, createSignal, onCleanup, onMount } from 'solid-js'
 import { PinIcon } from 'lucide-solid'
 

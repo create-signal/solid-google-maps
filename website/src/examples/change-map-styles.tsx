@@ -1,4 +1,4 @@
-import { APIProvider, Map } from 'solid-google-maps/dist'
+import { APIProvider, Map } from 'solid-google-maps'
 
 import { Component, createSignal } from 'solid-js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'

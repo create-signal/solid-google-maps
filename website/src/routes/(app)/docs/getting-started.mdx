@@ -27,23 +27,22 @@ npm install solid-google-maps
 You can now start adding components to your project.
 
 ```tsx showLineNumbers
-import {Component} from 'solid-js';
-import {APIProvider, Map} from 'solid-google-maps';
+import { Component } from 'solid-js'
+import { APIProvider, Map } from 'solid-google-maps'
 
-const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
 const App: Component = () => (
-    <APIProvider apiKey={API_KEY}>
-        <Map
-            style={{width: '100vw', height: '100vh'}}
-            defaultCenter={{lat: 22.54992, lng: 0}}
-            defaultZoom={3}
-            gestureHandling={'greedy'}
-            disableDefaultUI={true}
-        />
-    </APIProvider>
-);
-
+  <APIProvider apiKey={API_KEY}>
+    <Map
+      style={{ width: '100vw', height: '100vh' }}
+      defaultCenter={{ lat: 22.54992, lng: 0 }}
+      defaultZoom={3}
+      gestureHandling={'greedy'}
+      disableDefaultUI={true}
+    />
+  </APIProvider>
+)
 ```
 
 </Steps>

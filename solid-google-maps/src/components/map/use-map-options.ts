@@ -36,7 +36,7 @@ const mapOptionKeys: Set<keyof google.maps.MapOptions> = new Set([
   'styles',
   'tiltInteractionEnabled',
   'zoomControl',
-  'zoomControlOptions'
+  'zoomControlOptions',
 ])
 
 /**

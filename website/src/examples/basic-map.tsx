@@ -1,4 +1,4 @@
-import { APIProvider, Map } from 'solid-google-maps/dist'
+import { APIProvider, Map } from 'solid-google-maps'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 

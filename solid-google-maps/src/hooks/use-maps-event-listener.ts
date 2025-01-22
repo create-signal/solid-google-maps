@@ -7,13 +7,13 @@ import { Accessor, createEffect, on, onCleanup } from 'solid-js'
 export function useMapsEventListener<T extends (...args: any[]) => void>(
   target?: Accessor<object | null>,
   name?: string,
-  callback?: Accessor<T | undefined>
+  callback?: Accessor<T | undefined>,
 ) {
   createEffect(
     on(
       () => ({
         target: target?.(),
-        callback: callback?.()
+        callback: callback?.(),
       }),
       ({ target, callback }) => {
         if (!target || !name || !callback) return
@@ -21,7 +21,7 @@ export function useMapsEventListener<T extends (...args: any[]) => void>(
         const listener = google.maps.event.addListener(target, name, callback)
 
         return onCleanup(() => listener.remove())
-      }
-    )
+      },
+    ),
   )
 }

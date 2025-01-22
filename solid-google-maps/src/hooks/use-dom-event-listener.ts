@@ -7,7 +7,7 @@ import { Accessor, createEffect, on, onCleanup } from 'solid-js'
 export function useDomEventListener<T extends (...args: any[]) => void>(
   target?: Accessor<Node | null>,
   name?: string,
-  callback?: Accessor<T | undefined>
+  callback?: Accessor<T | undefined>,
 ) {
   createEffect(
     on(
@@ -18,7 +18,7 @@ export function useDomEventListener<T extends (...args: any[]) => void>(
         target.addEventListener(name, callback)
 
         return onCleanup(() => target.removeEventListener(name, callback))
-      }
-    )
+      },
+    ),
   )
 }

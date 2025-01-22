@@ -10,7 +10,7 @@ import {
   PlusIcon,
   UndoIcon,
 } from 'lucide-solid'
-import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map, useMap } from 'solid-google-maps/dist'
+import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map, useMap } from 'solid-google-maps'
 import { Component, createEffect, createMemo, createSignal, For, on, onCleanup, onMount, Show } from 'solid-js'
 
 import { Button } from '~/components/ui/button'
@@ -160,14 +160,14 @@ const GeoguessrGameView: Component = () => {
             unit: 'm',
           }
         : distance < 10000
-        ? {
-            number: Math.round(distance / 10) / 100,
-            unit: 'km',
-          }
-        : {
-            number: Math.round(distance / 1000),
-            unit: 'km',
-          }
+          ? {
+              number: Math.round(distance / 10) / 100,
+              unit: 'km',
+            }
+          : {
+              number: Math.round(distance / 1000),
+              unit: 'km',
+            }
 
     return {
       distance: distanceUnit,
