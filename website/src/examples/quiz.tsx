@@ -2,9 +2,17 @@
 
 import '@fontsource-variable/aleo'
 import '@fontsource-variable/big-shoulders-text'
+import { Meta } from '@solidjs/meta'
 
 import { Duration, intervalToDuration } from 'date-fns'
-import { CastleIcon, MessageCircleQuestionIcon, NewspaperIcon, TrophyIcon } from 'lucide-solid'
+import {
+  CastleIcon,
+  MessageCircleQuestionIcon,
+  MountainSnowIcon,
+  NewspaperIcon,
+  RotateCwIcon,
+  TrophyIcon,
+} from 'lucide-solid'
 import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map, useMap } from 'solid-google-maps'
 import {
   Component,
@@ -60,9 +68,15 @@ const gameModes: Record<GameType, GameMode> = {
 }
 
 export default function App() {
-  const [screen, setScreen] = createSignal<'menu' | 'game' | 'results'>('menu')
+  const [screen, setScreen] = createSignal<'menu' | 'game' | 'results'>('results')
   const [mode, setMode] = createSignal<GameMode>(gameModes['learning'])
-  const [results, setResults] = createSignal<GameResult | null>(null)
+  const [results, setResults] = createSignal<GameResult | null>({
+    highestLevel: 0,
+    time: { minutes: 0, seconds: 0 },
+    guessedCountries: 0,
+    hintsUsed: 0,
+    longestGuessStreak: 0,
+  })
 
   const handlePickGame = (game: GameMode) => {
     setMode(game)
@@ -76,7 +90,8 @@ export default function App() {
 
   return (
     <APIProvider apiKey={API_KEY}>
-      <div class="min-h-[calc(100vh-6rem)] flex flex-col justify-center w-full font-aleo text-quiz-foreground">
+      <Meta name="viewport" content="width=device-width, user-scalable=no" />
+      <div class="min-h-[calc(100vh-10rem)] flex flex-col justify-center w-full font-aleo text-quiz-foreground touch-pan-x touch-pan-y">
         <Show when={screen() == 'menu'}>
           <QuizMenu onPickGame={handlePickGame} />
         </Show>
@@ -174,6 +189,8 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
   // Check the guess against the current country
   const handleGuess = () => {
     const guess = input().toLowerCase().trim()
+
+    if (!guess) return
     if (
       guess === currentCountry().name.toLowerCase().trim() ||
       currentCountry()
@@ -198,7 +215,9 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
     setGuessStreak(0)
     pickNextCountry()
 
-    inputRef?.focus()
+    if (!isMobile()) {
+      inputRef?.focus()
+    }
   }
 
   // Pick a new country, if there are any left
@@ -255,7 +274,9 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
     setHintsUsed(hintsUsed() + 1)
     setHintIds([...hintIds(), id])
 
-    inputRef?.focus()
+    if (!isMobile()) {
+      inputRef?.focus()
+    }
   }
 
   // Clear all hints
@@ -267,8 +288,10 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
 
   // Calculate the results and return
   const handleGameFinish = () => {
+    const time = intervalToDuration({ start, end: new Date().getTime() })
+    if (time.minutes === props.durationMinutes) time.seconds = 0
     props.onGameFinished({
-      time: intervalToDuration({ start, end: new Date().getTime() }),
+      time,
       highestLevel: Math.floor((numberGuessed() / countries.length) * 3) + 1,
       guessedCountries: numberGuessed(),
       hintsUsed: hintsUsed(),
@@ -277,7 +300,7 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
   }
 
   return (
-    <div class="relative h-[calc(100vh-6rem)]">
+    <div class="relative h-[calc(100vh-10rem)]">
       <Map
         mapId="3facc9a170e81af7"
         class="w-full h-full"
@@ -306,7 +329,7 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
         guessedCountries={numberGuessed()}
         level={Math.floor((numberGuessed() / countries.length) * 3) + 1}
       />
-      <div class={cn('absolute w-full max-w-2xl z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col gap-4')}>
+      <div class={cn('absolute w-full max-w-2xl z-10 bottom-8 left-1/2 -translate-x-1/2 flex flex-col gap-4 px-4')}>
         <div
           class={cn(
             'rounded-full bg-white border-transparent border-2 flex gap-2 p-1 shadow-lg animate transition-all',
@@ -317,11 +340,16 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
           <input
             type="text"
             placeholder="Enter the name of the highlighted country"
-            class="flex ps-8 h-12 text-quiz-white-foreground text-lg w-full rounded-md bg-transparent px-3 py-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none data-[invalid]:border-error-foreground data-[invalid]:text-error-foreground"
+            class="flex ps-2 sm:ps-8 h-10 sm:h-12 pe-0 text-quiz-white-foreground text-sm sm:text-lg w-full rounded-md bg-transparent px-3 py-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none data-[invalid]:border-error-foreground data-[invalid]:text-error-foreground"
             value={input()}
             onInput={(e) => setInput((e.target as HTMLInputElement).value)}
             onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            onBlur={() => {
+              setFocused(false)
+              if (isMobile()) {
+                handleGuess()
+              }
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 handleGuess()
@@ -329,20 +357,23 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
             }}
             ref={(ref) => (inputRef = ref)}
           />
-          <Button class="px-4 bg-quiz-blue text-white rounded-full h-12 text-lg w-40" onClick={handleGuess}>
+          <Button
+            class="px-4 h-10 bg-quiz-blue text-white rounded-full sm:h-12 sm:text-lg sm:w-40"
+            onClick={handleGuess}
+          >
             Guess
           </Button>
         </div>
         <div class="flex justify-center gap-4">
           <Button
-            class="bg-quiz-yellow text-quiz-yellow-foreground rounded-full px-12 hover:bg-quiz-yellow/80 shadow-lg text-base"
+            class="bg-quiz-yellow text-quiz-yellow-foreground rounded-full px-12 hover:bg-quiz-yellow/80 shadow-lg text-sm sm:text-base"
             size="lg"
             onClick={handleGetHint}
           >
             Get hint
           </Button>
           <Button
-            class="bg-quiz-white text-quiz-white-foreground rounded-full px-12 hover:bg-quiz-white/80 shadow-lg text-base"
+            class="bg-quiz-white text-quiz-white-foreground rounded-full px-12 hover:bg-quiz-white/80 shadow-lg text-sm sm:text-base"
             size="lg"
             onClick={handleSkip}
           >
@@ -350,11 +381,11 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
           </Button>
         </div>
       </div>
-      <div class="absolute bottom-8 right-8 cursor-pointer" onClick={handleGameFinish}>
+      <div class="absolute top-12 sm:bottom-8 right-8 sm:top-auto cursor-pointer" onClick={handleGameFinish}>
         Give up
       </div>
       <Show when={!isServer}>
-        <Toaster class="toaster group absolute bottom-48" expand={true} position="bottom-left" />
+        <Toaster class="toaster group absolute bottom-48" expand={!isMobile()} position="bottom-left" />
       </Show>
     </div>
   )
@@ -364,11 +395,11 @@ const QuizHUD: Component<{ time: Duration; guessedCountries: number; level: numb
   const levelSegment = Math.round(countries.length / 3)
 
   return (
-    <div class="absolute w-full max-w-4xl z-20 top-8 left-1/2 -translate-x-1/2 flex flex-col gap-4 pointer-events-none">
+    <div class="absolute w-full max-w-4xl z-20 top-8 left-1/2 -translate-x-1/2 flex flex-col pointer-events-none px-4 text-center">
       <div class="font-display text-5xl font-black w-full text-center text-quiz-foreground">
-        {zeroPad(props.time.minutes || 0)}:{zeroPad(props.time.seconds || 0)}
+        {formatDuration(props.time)}
       </div>
-      <div class="flex gap-2">
+      <div class="flex sm:gap-2">
         <For each={[0, 1, 2]}>
           {(i) => {
             const percentage = () =>
@@ -377,16 +408,16 @@ const QuizHUD: Component<{ time: Duration; guessedCountries: number; level: numb
               <>
                 <div
                   class={cn(
-                    'w-16 h-16 bg-quiz-muted rounded-full scale-75 flex items-center justify-center text-quiz-muted-foreground transition-all border-white border-4 shadow',
+                    'size-14 sm:size-16 shrink-0 bg-quiz-muted rounded-full scale-75 flex items-center justify-center text-quiz-muted-foreground transition-all border-white border-4 shadow',
                     props.guessedCountries &&
                       props.level > i &&
-                      'scale-100 bg-white shadow-lg text-quiz-yellow stroke-quiz-yellow-border stroke-2',
+                      'scale-90 sm:scale-100 bg-white shadow-lg text-quiz-yellow stroke-quiz-yellow-border stroke-2',
                   )}
                 >
-                  <StarIcon class="size-10 " />
+                  <StarIcon class="size-8 sm:size-10" />
                 </div>
                 <div class="grow py-2 flex items-center">
-                  <div class="bg-quiz-muted w-full h-4 shadow">
+                  <div class="bg-quiz-muted w-full h-3 sm:h-4 shadow">
                     <div class="bg-quiz-blue h-full transition-all" style={{ width: `${percentage()}%` }}></div>
                   </div>
                 </div>
@@ -396,11 +427,14 @@ const QuizHUD: Component<{ time: Duration; guessedCountries: number; level: numb
         </For>
         <div
           class={cn(
-            'w-16 h-16 bg-quiz-muted rounded-full scale-75 flex items-center justify-center text-quiz-muted-foreground transition-all border-white border-4 shadow',
+            'size-14 sm:size-16 shrink-0 bg-quiz-muted rounded-full scale-75 flex items-center justify-center text-quiz-muted-foreground transition-all border-white border-4 shadow',
           )}
         >
-          <TrophyIcon class="size-8 " />
+          <TrophyIcon class="size-7 sm:size-8 " />
         </div>
+      </div>
+      <div class="-mt-2">
+        {props.guessedCountries}/{countries.length}
       </div>
     </div>
   )
@@ -411,7 +445,7 @@ const QuizMenu: Component<{ onPickGame: (mode: GameMode) => void }> = (props) =>
   const selectedMode = createMemo(() => gameModes[selection()])
 
   return (
-    <div class="flex flex-col items-center justify-center h-full gap-12 text-quiz-foreground text-center py-12">
+    <div class="flex flex-col items-center justify-center h-full gap-12 text-quiz-foreground text-center py-12 px-8">
       <div class="flex flex-col gap-4 items-center max-w-lg">
         <h1 class="font-black font-display text-6xl uppercase">Country Quiz</h1>
         <p>
@@ -420,7 +454,7 @@ const QuizMenu: Component<{ onPickGame: (mode: GameMode) => void }> = (props) =>
         </p>
       </div>
       <div class="flex flex-col gap-8 w-full items-center">
-        <div class="flex gap-8 justify-center">
+        <div class="flex-col sm:flex-row flex gap-4 sm:gap-8 justify-center">
           <For each={Object.keys(gameModes)}>
             {(option, i) => {
               const mode = gameModes[option as GameType]
@@ -485,19 +519,53 @@ const QuizResults: Component<{ results: GameResult; onPlayAgain: () => void; onR
   props,
 ) => {
   return (
-    <div class="flex flex-col items-center justify-center h-full gap-12 text-quiz-foreground text-center py-12">
-      <div class="flex flex-col gap-4 items-center max-w-lg">
-        <h1 class="font-black font-display text-6xl uppercase">Results</h1>
-        <p>{JSON.stringify(props.results)}</p>
+    <div class="flex flex-col items-center justify-center h-full gap-12 text-quiz-foreground text-center py-12 px-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 max-w-4xl">
+        <div class="flex flex-col gap-4">
+          <div class="font-display text-5xl font-black uppercase">{props.results.highestLevel}</div>
+          <div class="text-sm">highest level reached</div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="font-display text-5xl font-black uppercase">{props.results.guessedCountries}</div>
+          <div class="text-sm">number of guessed countries</div>
+        </div>
+        <div class="flex flex-col gap-4 col-span-2 md:col-span-1 -order-1 md:order-none">
+          <div class="font-display text-5xl font-black uppercase">{formatDuration(props.results.time)}</div>
+          <div class="text-sm">time to complete quiz</div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="font-display text-5xl font-black uppercase">{props.results.hintsUsed}</div>
+          <div class="text-sm">hints used during the game</div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="font-display text-5xl font-black uppercase">{props.results.longestGuessStreak}</div>
+          <div class="text-sm">longest guessing streak</div>
+        </div>
       </div>
-      <div class="flex gap-4 w-full justify-center">
-        <Button class="px-4 bg-quiz-blue text-white rounded-full h-12 text-lg w-40" onClick={() => props.onPlayAgain()}>
+      <div class="flex justify-center">
+        <Show when={props.results.highestLevel < 3}>
+          <img src="/ribbon-level1.svg" />
+        </Show>
+        <Show when={props.results.highestLevel == 3}>
+          <img src="/medal-silver.svg" />
+        </Show>
+        <Show when={props.results.highestLevel == 4}>
+          <img src="/trophy-gold.svg" />
+        </Show>
+      </div>
+      <div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+        <Button
+          class="px-4 bg-quiz-blue text-white hover:bg-quiz-blue/80 rounded-full h-12 text-lg"
+          onClick={() => props.onPlayAgain()}
+        >
+          <RotateCwIcon class="size-4" />
           Play Again
         </Button>
         <Button
-          class="px-4 bg-quiz-blue text-white rounded-full h-12 text-lg w-40"
+          class="px-4 bg-quiz-muted text-quiz-foreground hover:bg-quiz-muted/80 rounded-full h-12 text-lg"
           onClick={() => props.onReturnToMenu()}
         >
+          <MountainSnowIcon class="size-4" />
           Change Difficulty
         </Button>
       </div>
@@ -506,6 +574,8 @@ const QuizResults: Component<{ results: GameResult; onPlayAgain: () => void; onR
 }
 
 const zeroPad = (num: number) => String(num).padStart(2, '0')
+
+const formatDuration = (duration: Duration) => `${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`
 
 const StarIcon = (props: ComponentProps<'svg'>) => (
   <svg viewBox="0 0 28 28" role="presentation" {...props}>
@@ -544,6 +614,8 @@ const guessedStyleOption: google.maps.FeatureStyleOptions = {
   fillColor: '#039dbf',
   fillOpacity: 1,
 }
+
+const isMobile = () => window.innerWidth < 640
 
 const countries: Country[] = [
   {
@@ -715,6 +787,10 @@ const countries: Country[] = [
     code: 'LU',
     placeId: 'ChIJRyEhyrlFlUcR75LTAvZg22Q',
     capital: 'Luxembourg',
+    showPin: {
+      lat: 49.8158683,
+      lng: 6.1296751,
+    },
   },
   {
     name: 'Latvia',
@@ -856,9 +932,9 @@ const withIcons = countries.filter((c) => c.showPin)
 
 const bounds = {
   north: 71.16868730294564,
-  east: 40.2307220813462,
+  east: 68.98610777584814,
   south: 36.38727093488623,
   west: -24.53697620556881,
 }
 
-const boundsPadding = { bottom: 200, top: 100 }
+const boundsPadding = { bottom: 200, top: 110 }
