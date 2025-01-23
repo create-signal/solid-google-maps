@@ -8,6 +8,9 @@ const title = 'SolidJS Google Maps'
 const description = 'SolidJS components and hooks for the Google Maps Javascript API'
 
 import '@fontsource/inter'
+import '@fontsource-variable/aleo'
+import '@fontsource-variable/big-shoulders-text'
+
 import { getCookie } from 'vinxi/http'
 import { ColorModeProvider, ColorModeScript, cookieStorageManagerSSR } from '@kobalte/core'
 import { isServer } from 'solid-js/web'

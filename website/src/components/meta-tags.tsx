@@ -22,7 +22,6 @@ export function MetaTags(rawProps: HeadProps) {
       <Title>{props.title}</Title>
 
       <Meta charset="utf-8" />
-      <Meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <Meta name="title" content={props.title} />
       <Meta name="description" content={props.description} />

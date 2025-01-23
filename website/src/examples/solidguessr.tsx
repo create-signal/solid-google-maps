@@ -1,4 +1,5 @@
 import {
+  CircleHelp,
   CogIcon,
   FlagIcon,
   MapPinHouseIcon,
@@ -14,6 +15,7 @@ import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map, useMap } f
 import { Component, createEffect, createMemo, createSignal, For, on, onCleanup, onMount, Show } from 'solid-js'
 
 import { Button } from '~/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip'
 import { cn } from '~/lib/utils'
 
@@ -36,7 +38,26 @@ const locations: google.maps.LatLngLiteral[] = [
 export default function App() {
   return (
     <APIProvider apiKey={API_KEY}>
-      <GeoguessrGameView />
+      <div class="relative light">
+        <GeoguessrGameView />
+        <Popover placement="left-start">
+          <PopoverTrigger as={CircleHelp} class="absolute top-4 md:top-8 right-4 md:right-8 z-10 text-white" />
+          <PopoverContent class="text-sm flex flex-col gap-2">
+            <p>
+              This demo is adapted from{' '}
+              <a href="https://www.geoguessr.com" target="_blank" class="underline">
+                GeoGuessr
+              </a>
+              .
+            </p>
+            <p>
+              Use the main map to navigate your surroundings, and try and guess where you are by placing a pin on the
+              map in the lower right corner. Hit the "Guess" button to see how close your guess is to the actual
+              location.
+            </p>
+          </PopoverContent>
+        </Popover>
+      </div>
     </APIProvider>
   )
 }
@@ -273,7 +294,7 @@ const GeoguessrGameView: Component = () => {
   })
 
   return (
-    <div class="flex flex-col w-full relative h-[calc(100vh-6rem)]">
+    <div class="flex flex-col w-full relative h-[calc(100vh-10rem)]">
       <Map
         id="streetview"
         class="h-full w-full grow"
@@ -293,7 +314,7 @@ const GeoguessrGameView: Component = () => {
         </Show>
       </Map>
       <Show when={roundActive()}>
-        <div class="absolute top-8 w-full grid grid-cols-3 z-10 px-8 select-none">
+        <div class="absolute top-4 md:top-8 w-full grid grid-cols-3 z-10 px-4 md:px-8 select-none">
           <div class="flex items-center">
             <GeoguessrLogo />
           </div>
@@ -301,7 +322,7 @@ const GeoguessrGameView: Component = () => {
             <GeoguessrCompass heading={heading()} />
           </div>
         </div>
-        <div class="absolute bottom-8 px-8 flex justify-between w-full">
+        <div class="absolute bottom-4 md:bottom-8 px-4 md:px-8 flex justify-between w-full">
           <GeoguessrControls
             checkpoint={checkpoint()}
             positionStack={positionStack()}
@@ -334,6 +355,14 @@ const GeoguessrMapView: Component<{
     props.onGuess(location()!)
   }
 
+  const handlePickLocation = (location: google.maps.LatLngLiteral | null) => {
+    if (open()) {
+      setLocation(location)
+    } else {
+      setHovered(true)
+    }
+  }
+
   const open = createMemo(() => hovered() || pinned())
 
   let timeout: ReturnType<typeof setTimeout> | null = null
@@ -346,7 +375,16 @@ const GeoguessrMapView: Component<{
 
   // Close the controls after 1 second of inactivity
   const handleLeave = () => {
+    if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => setHovered(false), 1000)
+  }
+
+  const handleSizeDown = () => {
+    if (isMobile()) {
+      setHovered(false)
+    } else {
+      setSize(size() === 0 ? 0 : size() - 1)
+    }
   }
 
   onCleanup(() => {
@@ -354,7 +392,17 @@ const GeoguessrMapView: Component<{
   })
 
   return (
-    <div class="flex flex-col gap-4 z-10 relative" onMouseOver={() => handleHover()} onMouseOut={() => handleLeave()}>
+    <div
+      class={cn(
+        'flex flex-col gap-4 z-10 relative transition-all duration-300 xl:origin-bottom-right w-52',
+        open() && size() == 0 && 'w-[15rem]',
+        open() && size() == 1 && 'w-full xl:w-[28rem]',
+        open() && size() == 2 && 'w-[40rem]',
+        open() && size() == 3 && 'w-[60rem]',
+      )}
+      onMouseOver={() => handleHover()}
+      onMouseOut={() => handleLeave()}
+    >
       <div
         class={cn(
           'absolute top-0 left-0 bg-black/40 z-0 -translate-y-full px-2 py-1 flex gap-2 dark rounded-t-sm',
@@ -363,7 +411,7 @@ const GeoguessrMapView: Component<{
       >
         <Button
           size="icon"
-          class="rounded-full size-5 p-2 [&_svg]:size-3"
+          class="hidden xl:inline-flex rounded-full size-5 p-2 [&_svg]:size-3"
           disabled={size() == 3}
           onClick={() => setSize(size() + 1)}
         >
@@ -373,7 +421,7 @@ const GeoguessrMapView: Component<{
           size="icon"
           class="rounded-full size-5 p-2 [&_svg]:size-3"
           disabled={size() == 0}
-          onClick={() => setSize(size() === 0 ? 0 : size() - 1)}
+          onClick={handleSizeDown}
         >
           <MoveDownRightIcon />
         </Button>
@@ -386,17 +434,17 @@ const GeoguessrMapView: Component<{
         id="map"
         mapId="DEMO_MAP_ID"
         class={cn(
-          'transition-all duration-300 w-52 h-28',
-          open() && size() == 0 && 'w-[15rem] h-36',
-          open() && size() == 1 && 'w-[28rem] h-[19rem]',
-          open() && size() == 2 && 'w-[40rem] h-[28rem]',
-          open() && size() == 3 && 'w-[60rem] h-[31rem]',
+          'transition-all duration-300 w-full h-28 xl:origin-bottom-right',
+          open() && size() == 0 && 'h-36',
+          open() && size() == 1 && 'w-full h-[28rem] xl:h-[19rem]',
+          open() && size() == 2 && 'h-[28rem]',
+          open() && size() == 3 && 'h-[31rem]',
         )}
         defaultZoom={1}
         defaultCenter={{ lat: 0, lng: 0 }}
         gestureHandling={'greedy'}
         disableDefaultUI={true}
-        onClick={(ev) => setLocation(ev.detail.latLng || null)}
+        onClick={(ev) => handlePickLocation(ev.detail.latLng || null)}
       >
         <Show when={location()}>
           <AdvancedMarker position={location()} anchorPoint={AdvancedMarkerAnchorPoint.CENTER}>
@@ -488,7 +536,7 @@ const GeoguessrCompass: Component<{ heading: number }> = (props) => {
     })
 
   return (
-    <div class="bg-black/40 rounded-full left-1/2 h-8 w-[240px] z-10">
+    <div class="bg-black/40 rounded-full left-1/2 h-8 w-36 xl:w-[240px] z-10">
       <div class="flex flex-nowrap h-8 overflow-hidden w-full items-center">
         <For each={compassDirections}>
           {(dir, index) => {
@@ -537,7 +585,7 @@ const GeoguessrControls: Component<{
   onReturnToStart: () => void
 }> = (props) => {
   return (
-    <div class="grid grid-cols-2 gap-4 self-end mb-4 z-10">
+    <div class="hidden xl:grid grid-cols-2 gap-4 self-end mb-4 z-10">
       <div class="flex flex-col gap-4">
         <div class="flex flex-col">
           <Tooltip placement="top">
@@ -633,11 +681,11 @@ const GeoguessrResultView: Component<{
   onPickNextLocation: () => void
 }> = (props) => {
   return (
-    <div class="bg-[#1a1a2e] text-center flex justify-center items-center text-white py-8">
-      <div class="grid max-w-3xl grid-cols-3 gap-12">
+    <div class="bg-[#1a1a2e] text-center flex justify-center items-center text-white py-4 md:py-8">
+      <div class="grid max-w-3xl grid-cols-1 md:grid-cols-3 gap-4 md:gap-12">
         <div class="flex flex-col justify-center gap-1">
           <div
-            class="text-4xl font-extrabold"
+            class="text-xl md:text-4xl font-extrabold"
             style={{
               'text-shadow':
                 '0 .25rem 0 rgba(16,16,28,.5),.125rem .125rem .5rem #00a2fe,0 -.25rem .5rem #7950e5,-.25rem .5rem .5rem #3ae8bd,0 .375rem 2rem #7950e5,0 0 0 #d9d7f0,0 0 1.5rem rgba(161,155,217,.65),.25rem .25rem 1rem #a19bd9',
@@ -657,18 +705,18 @@ const GeoguessrResultView: Component<{
               'background-image': 'radial-gradient(150% 160% at 50% 15%, hsla(0,0%,100%,.6) 0, transparent 30%)',
               'text-shadow': '0 0.0625rem 0.125rem #1a1a2e',
             }}
-            class="rounded-full h-14 px-16 text-lg uppercase font-bold italic hover:scale-110 transition-transform"
+            class="rounded-full h-14 px-8 md:px-16 text-sm md:text-lg uppercase font-bold italic hover:scale-110 transition-transform"
             onClick={() => props.onPickNextLocation()}
           >
             Next
           </Button>
-          <span class="text-xs text-gray-400 font-medium">
+          <span class="hidden md:block text-xs text-gray-400 font-medium">
             Hit <span class="border border-gray-400 rounded p-0.5">space</span> to continue
           </span>
         </div>
         <div class="flex flex-col justify-center gap-1">
           <div
-            class="text-4xl font-extrabold"
+            class="text-xl md:text-4xl font-extrabold"
             style={{
               'text-shadow':
                 '0 .25rem 0 #bf7b2e,.125rem .125rem .5rem #e94560,0 -.25rem .5rem #ffa43d,-.25rem .5rem .5rem #fecd19,0 .375rem 2rem #e94560,0 0 0 #e94560,0 0 1.5rem #e94560,.25rem .25rem 1rem #fecd19',
@@ -701,14 +749,27 @@ const GeoguessrLocationPin: Component = () => {
 
 const GeoguessrLogo: Component = () => {
   return (
-    <span
-      class="text-3xl text-white font-bold"
-      style={{
-        '-webkit-text-stroke': '5px #CC302E',
-        'paint-order': 'stroke fill',
-      }}
-    >
-      SolidGuessr
-    </span>
+    <>
+      <span
+        class="text-3xl text-white font-bold hidden md:block"
+        style={{
+          '-webkit-text-stroke': '5px #CC302E',
+          'paint-order': 'stroke fill',
+        }}
+      >
+        SolidGuessr
+      </span>
+      <span
+        class="text-xl text-white font-bold block md:hidden"
+        style={{
+          '-webkit-text-stroke': '5px #CC302E',
+          'paint-order': 'stroke fill',
+        }}
+      >
+        SG
+      </span>
+    </>
   )
 }
+
+const isMobile = () => window.innerWidth < 1280

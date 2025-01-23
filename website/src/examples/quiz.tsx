@@ -1,12 +1,11 @@
 /* Credit to the game that inspired this demo https://geography.games/europe-quiz by https://zcreativelabs.com/ */
 
-import '@fontsource-variable/aleo'
-import '@fontsource-variable/big-shoulders-text'
 import { Meta } from '@solidjs/meta'
 
 import { Duration, intervalToDuration } from 'date-fns'
 import {
   CastleIcon,
+  CircleHelp,
   MessageCircleQuestionIcon,
   MountainSnowIcon,
   NewspaperIcon,
@@ -31,6 +30,7 @@ import { isServer } from 'solid-js/web'
 import { toast } from 'solid-sonner'
 import { Badge } from '~/components/ui/badge'
 import { Button } from '~/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '~/components/ui/popover'
 import { Toaster } from '~/components/ui/sonner'
 import { cn } from '~/lib/utils'
 
@@ -68,7 +68,7 @@ const gameModes: Record<GameType, GameMode> = {
 }
 
 export default function App() {
-  const [screen, setScreen] = createSignal<'menu' | 'game' | 'results'>('results')
+  const [screen, setScreen] = createSignal<'menu' | 'game' | 'results'>('menu')
   const [mode, setMode] = createSignal<GameMode>(gameModes['learning'])
   const [results, setResults] = createSignal<GameResult | null>({
     highestLevel: 0,
@@ -91,7 +91,7 @@ export default function App() {
   return (
     <APIProvider apiKey={API_KEY}>
       <Meta name="viewport" content="width=device-width, user-scalable=no" />
-      <div class="min-h-[calc(100vh-10rem)] flex flex-col justify-center w-full font-aleo text-quiz-foreground touch-pan-x touch-pan-y">
+      <div class="min-h-[calc(100vh-10rem)] flex flex-col justify-center w-full font-aleo text-quiz-foreground touch-pan-x touch-pan-y relative light bg-background">
         <Show when={screen() == 'menu'}>
           <QuizMenu onPickGame={handlePickGame} />
         </Show>
@@ -105,6 +105,25 @@ export default function App() {
             onReturnToMenu={() => setScreen('menu')}
           />
         </Show>
+        <Popover placement="left-start">
+          <PopoverTrigger as={CircleHelp} class="absolute top-4 right-4 md:top-8 md:right-8" />
+          <PopoverContent class="text-sm flex flex-col gap-2">
+            <p>
+              This demo is adapted from{' '}
+              <a href="https://geography.games/europe-quiz" target="_blank" class="underline">
+                Europe Quiz
+              </a>{' '}
+              by{' '}
+              <a href="https://zcreativelabs.com" target="_blank" class="underline">
+                zcreativelabs
+              </a>
+            </p>
+            <p>
+              Type the name of the country highlighted in red. Try and see how many countries you can name before the
+              time runs out!
+            </p>
+          </PopoverContent>
+        </Popover>
       </div>
     </APIProvider>
   )
@@ -381,7 +400,10 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
           </Button>
         </div>
       </div>
-      <div class="absolute top-12 sm:bottom-8 right-8 sm:top-auto cursor-pointer" onClick={handleGameFinish}>
+      <div
+        class="absolute top-4 left-4 sm:bottom-8 sm:right-8 sm:left-auto sm:top-auto cursor-pointer h-6 flex items-center"
+        onClick={handleGameFinish}
+      >
         Give up
       </div>
       <Show when={!isServer}>
