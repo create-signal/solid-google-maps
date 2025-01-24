@@ -67,6 +67,10 @@ export const docsConfig: Config = {
           title: 'Marker Clustering',
           href: '/docs/examples/marker-clustering',
         },
+        {
+          title: 'Static Map',
+          href: '/docs/examples/static-map',
+        },
       ],
     },
     {
