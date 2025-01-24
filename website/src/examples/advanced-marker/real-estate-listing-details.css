@@ -23,6 +23,7 @@
   flex-direction: column;
   justify-content: center;
   gap: 16px;
+  background: #fff;
 }
 .advanced-marker-example .listing-content h2 {
   font-family: var(--font-family-rufina);

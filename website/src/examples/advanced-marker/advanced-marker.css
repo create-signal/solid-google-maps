@@ -3,7 +3,12 @@
   position: relative;
   transform: translateY(-5px);
   transition: all 0.2s ease-in-out;
+  --estate-yellow: #b88b2e;
+  --estate-yellow-light: #ffe29c;
   --estate-green-dark: #12271e;
+  --estate-green-light: #18342a;
+  --estate-01-grey-mid: #f4f4f4;
+  --estate-grey-main: #404040;
 }
 
 .advanced-marker-example .real-estate-marker .tip {
