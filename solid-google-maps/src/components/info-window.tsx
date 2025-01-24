@@ -159,44 +159,63 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
 
   createEffect(
     on(
-      () => ({
-        infoWindow: infoWindow(),
-        openOptions: openOptions(),
-        open: props.open,
-        pixelOffset: props.pixelOffset,
-        anchor: anchor(),
-      }),
-      ({ infoWindow, openOptions, open, pixelOffset, anchor }) => {
-        if (!infoWindow || !openOptions.map) return
+      () => ({ infoWindow: infoWindow(), anchor: anchor(), pixelOffset: props.pixelOffset }),
+      ({ infoWindow, anchor, pixelOffset }) => {
+        if (!infoWindow || !anchor) return
 
-        if (open) {
-          if (anchor && isAdvancedMarker(anchor) && anchor.content instanceof Element) {
-            const wrapper = anchor.content as CustomMarkerContent
-            const wrapperBcr = wrapper?.getBoundingClientRect()
-
-            if (wrapperBcr) {
-              const anchorDomContent = anchor.content.firstElementChild as Element
-
-              const contentBcr = anchorDomContent.getBoundingClientRect()
-
-              const anchorOffsetX = contentBcr.x - wrapperBcr.x + (contentBcr.width - wrapperBcr.width) / 2
-              const anchorOffsetY = contentBcr.y - wrapperBcr.y
-
-              infoWindow.setOptions({
-                pixelOffset: new google.maps.Size(
-                  pixelOffset ? pixelOffset[0] + anchorOffsetX : anchorOffsetX,
-                  pixelOffset ? pixelOffset[1] + anchorOffsetY : anchorOffsetY,
-                ),
-              })
-            }
-          }
-          infoWindow.open(openOptions)
-        } else {
-          infoWindow.close()
+        if (isAdvancedMarker(anchor) && anchor.content instanceof Element) {
+          adjustWindowToAnchor(infoWindow, anchor.content as CustomMarkerContent, pixelOffset)
         }
       },
     ),
   )
+  // ## handle controlled state
+  createEffect(
+    on(
+      () => ({
+        infoWindow: infoWindow(),
+        openOptions: openOptions(),
+        open: props.open,
+        anchor: anchor(),
+      }),
+      ({ infoWindow, openOptions, open }) => {
+        if (!infoWindow || !openOptions.map) return
+
+        if (open || typeof open === 'undefined') {
+          infoWindow.open(openOptions)
+        } else {
+          infoWindow.close()
+        }
+
+        onCleanup(() => {
+          infoWindow.close()
+        })
+      },
+    ),
+  )
+
+  const adjustWindowToAnchor = (
+    infoWindow: google.maps.InfoWindow,
+    anchorContent: CustomMarkerContent,
+    pixelOffset?: [number, number],
+  ) => {
+    const wrapper = anchorContent
+    const wrapperBcr = wrapper.getBoundingClientRect()
+
+    const anchorDomContent = anchorContent.firstElementChild as Element
+
+    const contentBcr = anchorDomContent.getBoundingClientRect()
+
+    const anchorOffsetX = contentBcr.x - wrapperBcr.x + (contentBcr.width - wrapperBcr.width) / 2
+    const anchorOffsetY = contentBcr.y - wrapperBcr.y
+
+    infoWindow.setOptions({
+      pixelOffset: new google.maps.Size(
+        pixelOffset ? pixelOffset[0] + anchorOffsetX : anchorOffsetX,
+        pixelOffset ? pixelOffset[1] + anchorOffsetY : anchorOffsetY,
+      ),
+    })
+  }
 
   return (
     <>

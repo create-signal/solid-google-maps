@@ -1,4 +1,4 @@
-import { Accessor, createEffect } from 'solid-js'
+import { Accessor, createEffect, createMemo } from 'solid-js'
 import { MapProps } from '.'
 
 const mapOptionKeys: Set<keyof google.maps.MapOptions> = new Set([
@@ -54,7 +54,7 @@ export function useMapOptions(map: Accessor<google.maps.Map | null>, mapProps: M
    * constructor via mapOptions.
    */
 
-  const mapOptions = () => {
+  const mapOptions = createMemo(() => {
     const options: google.maps.MapOptions = {}
     const keys = Object.keys(mapProps) as (keyof google.maps.MapOptions)[]
     for (const key of keys) {
@@ -64,7 +64,7 @@ export function useMapOptions(map: Accessor<google.maps.Map | null>, mapProps: M
     }
 
     return options
-  }
+  })
 
   // update the map options when mapOptions is changed
   // Note: due to the destructuring above, mapOptions will be seen as changed

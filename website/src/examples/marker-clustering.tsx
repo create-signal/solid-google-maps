@@ -56,7 +56,7 @@ export default function App() {
           )}
         </ClusteredMarkers>
         <Show when={selectedTreeKey() && markers()[selectedTreeKey()!]}>
-          <InfoWindow anchor={markers()[selectedTreeKey()!]} onCloseClick={() => setSelectedTreeKey(null)} open={true}>
+          <InfoWindow anchor={markers()[selectedTreeKey()!]} onCloseClick={() => setSelectedTreeKey(null)}>
             {selectedTree()?.name}
           </InfoWindow>
         </Show>
@@ -81,7 +81,7 @@ const ControlPanel: Component<{
   onCategoryChange: (category: string | null) => void
 }> = (props) => {
   return (
-    <Card class="absolute top-4 right-4 z-10 max-w-xs">
+    <Card class="absolute top-4 right-4 z-10 max-w-72">
       <CardHeader>
         <CardTitle>Filter Trees</CardTitle>
       </CardHeader>

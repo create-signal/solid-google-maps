@@ -100,7 +100,7 @@ export default function App() {
         </AdvancedMarker>
 
         {/* simple positioned infowindow */}
-        <InfoWindow position={{ lat: 40, lng: 0 }} maxWidth={200} open={true}>
+        <InfoWindow position={{ lat: 40, lng: 0 }} maxWidth={200}>
           <p>
             This is the content for another infowindow with <em>HTML</em>
             -elements.

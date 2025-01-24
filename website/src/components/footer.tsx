@@ -15,7 +15,7 @@ export default function Footer() {
       <div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
         <p class="text-center text-sm leading-loose text-muted-foreground md:text-left">
           Built by <Link href="https://github.com/visgl">visgl</Link>. Ported to Solid by{' '}
-          <Link href="https://github.com/create-signal">Kieran Molloy</Link>.
+          <Link href="https://github.com/create-signal">Create Signal</Link>.
         </p>
       </div>
     </footer>

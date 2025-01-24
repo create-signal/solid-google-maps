@@ -9,6 +9,7 @@ import {
   children,
   createContext,
   createEffect,
+  createMemo,
   createSignal,
   on,
   onCleanup,
@@ -23,13 +24,13 @@ export interface AdvancedMarkerContextValue {
 }
 
 export function isAdvancedMarker(
-  marker: google.maps.Marker | google.maps.marker.AdvancedMarkerElement,
+  marker?: google.maps.Marker | google.maps.marker.AdvancedMarkerElement | null,
 ): marker is google.maps.marker.AdvancedMarkerElement {
-  return (marker as google.maps.marker.AdvancedMarkerElement).content !== undefined
+  return !!marker && (marker as google.maps.marker.AdvancedMarkerElement).content !== undefined
 }
 
-function isElementNode(node: Node): node is HTMLElement {
-  return node.nodeType === Node.ELEMENT_NODE
+function isElementNode(node?: Node | null): node is HTMLElement {
+  return node?.nodeType === Node.ELEMENT_NODE
 }
 
 /**
@@ -96,7 +97,7 @@ export type AdvancedMarkerProps = ParentProps<
        */
       anchorPoint?: AdvancedMarkerAnchorPoint | [string, string]
       /**
-       * A className for the content element.
+       * A class for the content element.
        * (can only be used with HTML Marker content)
        */
       class?: string
@@ -112,6 +113,7 @@ type MarkerContentProps = ParentProps<{
   styles?: JSX.CSSProperties
   class?: string
   anchorPoint?: AdvancedMarkerAnchorPoint | [string, string]
+  onClick?: (e: MouseEvent) => void
 }>
 
 const MarkerContent: Component<MarkerContentProps> = (props) => {
@@ -123,7 +125,7 @@ const MarkerContent: Component<MarkerContentProps> = (props) => {
 
   return (
     // anchoring container
-    <div style={{ transform: transformStyle() }}>
+    <div style={{ transform: transformStyle() }} onClick={props.onClick}>
       {/* AdvancedMarker div that user can give styles and classes */}
       <div class={props.class} style={props.styles}>
         {props.children}
@@ -132,7 +134,7 @@ const MarkerContent: Component<MarkerContentProps> = (props) => {
   )
 }
 
-export type CustomMarkerContent = (HTMLDivElement & { isCustomMarker?: boolean }) | null
+export type CustomMarkerContent = HTMLDivElement & { isCustomMarker?: boolean }
 
 export type AdvancedMarkerRef = google.maps.marker.AdvancedMarkerElement | null
 
@@ -145,8 +147,11 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
   const markerLibrary = useMapsLibrary('marker')
 
   const resolved = children(() => props.children)
-  const numChildren = () =>
-    resolved.toArray().filter((item) => (item instanceof Node && item.nodeType === 3 ? item.textContent : item)).length
+  const numChildren = createMemo(
+    () =>
+      resolved.toArray().filter((item) => (item instanceof Node && item.nodeType === 3 ? item.textContent : item))
+        .length,
+  )
 
   // create an AdvancedMarkerElement instance and add it to the map once available
   createEffect(
@@ -164,7 +169,7 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
         setMarker(newMarker)
 
         // create the container for marker content if there are children
-        let contentElement: CustomMarkerContent = null
+        let contentElement: CustomMarkerContent | null = null
 
         if (numChildren() > 0) {
           contentElement = document.createElement('div')
@@ -231,7 +236,7 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
         else marker.gmpDraggable = false
       },
     ),
-  ) //, [marker, draggable, onDrag, onDragEnd, onDragStart])
+  )
 
   // set gmpClickable from props (when unspecified, it's true if the onClick or one of
   // the hover events callbacks are specified)
@@ -255,18 +260,46 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
         marker.gmpClickable = gmpClickable
 
         // enable pointer events for the markers with custom content
-        /*if (gmpClickable && marker?.content && isElementNode(marker.content)) {
-          marker.content.style.pointerEvents = 'none'
+        if (gmpClickable && isElementNode(marker.content)) {
+          marker.content.style.pointerEvents = 'all'
+          marker.content.style.cursor = 'pointer'
 
           if (marker.content.firstElementChild) {
             ;(marker.content.firstElementChild as HTMLElement).style.pointerEvents = 'all'
           }
-        }*/
+        }
       },
     ),
-  ) //, [marker, clickable, onClick, onMouseEnter, onMouseLeave])
+  )
 
-  useMapsEventListener(marker, 'click', () => props.onClick)
+  createEffect(
+    on(
+      () => ({
+        marker: marker(),
+        children: numChildren(),
+        onClick: props.onClick,
+      }),
+      ({ marker, children, onClick }) => {
+        // We should only assign this listener if we are using the default marker (glyph, not html)
+        // If we are using HTML content, we will instead use the onClick prop of MarkerContent
+        // SolidJS event delegation causes click events on dom elements inside AdvancedMarker to bubble up to the parent,
+        // even if you use event.stopPropagation()
+        // For instance, in the Advance Marker example, clicking the carousel chevron will close the info window
+        // This could alternately by achieved by requiring the user to use on:click instead of onClick on child components of AdvancedMarker
+        // Or by having them add { solid: { solid: delegateEvents: false } } to their app.config.ts
+        // But both seem like shit options
+        // More info here https://docs.solidjs.com/concepts/components/event-handlers#event-delegation
+        if (!marker || children || !onClick) return
+
+        const listener = google.maps.event.addListener(marker, 'click', onClick)
+
+        onCleanup(() => {
+          listener.remove()
+        })
+      },
+    ),
+  )
+
   useMapsEventListener(marker, 'drag', () => props.onDrag)
   useMapsEventListener(marker, 'dragstart', () => props.onDragStart)
   useMapsEventListener(marker, 'dragend', () => props.onDragEnd)
@@ -299,10 +332,30 @@ export const AdvancedMarker = (props: AdvancedMarkerProps) => {
   return (
     <AdvancedMarkerContext.Provider value={{ marker }}>
       <Portal mount={contentContainer() || undefined}>
-        <MarkerContent anchorPoint={props.anchorPoint} styles={props.style} class={props.class}>
+        <MarkerContent
+          anchorPoint={props.anchorPoint}
+          styles={props.style}
+          class={props.class}
+          onClick={(e) => props.onClick?.(createMarkerEvent(e, marker()))}
+        >
           {props.children}
         </MarkerContent>
       </Portal>
     </AdvancedMarkerContext.Provider>
   )
+}
+
+const createMarkerEvent = (
+  e: MouseEvent,
+  marker?: google.maps.marker.AdvancedMarkerElement | null,
+): google.maps.MapMouseEvent => {
+  const position = marker?.position || null
+  const latLngLiteral = !position ? null : 'toJSON' in position ? position.toJSON() : position
+  const latLng = latLngLiteral ? new google.maps.LatLng(latLngLiteral) : null
+
+  return {
+    latLng: latLng,
+    stop: () => e.stopPropagation(),
+    domEvent: e,
+  }
 }

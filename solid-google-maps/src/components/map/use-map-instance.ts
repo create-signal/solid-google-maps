@@ -85,15 +85,6 @@ export function useMapInstance(
     }
   })
 
-  // apply default camera props if available and not overwritten by controlled props
-  /*if (!mapOptions.center && defaultCenter) mapOptions.center = defaultCenter
-  if (!mapOptions.zoom && Number.isFinite(defaultZoom)) mapOptions.zoom = defaultZoom
-  if (!mapOptions.heading && Number.isFinite(defaultHeading)) mapOptions.heading = defaultHeading
-  if (!mapOptions.tilt && Number.isFinite(defaultTilt)) mapOptions.tilt = defaultTilt
-
-  for (const key of Object.keys(mapOptions) as (keyof typeof mapOptions)[])
-    if (mapOptions[key] === undefined) delete mapOptions[key]*/
-
   const [savedMapStateRef, setSavedMapStateRef] = createSignal<{
     mapId?: string | null
     cameraState: CameraState

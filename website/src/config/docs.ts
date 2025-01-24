@@ -60,6 +60,14 @@ export const docsConfig: Config = {
           href: '/docs/examples/markers-and-infowindows',
         },
         {
+          title: 'Advanced Marker',
+          href: '/docs/examples/advanced-marker',
+        },
+        {
+          title: 'Advanced Marker Interaction',
+          href: '/docs/examples/advanced-marker-interaction',
+        },
+        {
           title: 'Synchronized Maps',
           href: '/docs/examples/synchronized-maps',
         },

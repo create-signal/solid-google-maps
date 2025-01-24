@@ -222,11 +222,19 @@ const ControlPanel: Component<{
   onMapConfigChange: (id: MapConfig | null) => void
 }> = (props) => {
   return (
-    <Card class="absolute top-4 right-4 z-10">
+    <Card class="absolute top-4 right-4 z-10 max-w-72">
       <CardHeader>
         <CardTitle>Select Map Style</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent class="flex flex-col gap-4 space-y-4 text-sm">
+        <p>
+          The Map component can switch between multiple styles, even between cloud-based and local styles, on the fly.
+          Switching the mapType is supported as well.
+        </p>
+        <p>
+          Due to the way the Maps API works, a new google.maps.Map instance has to be created when changing the mapId.
+          This will affect the number of paid map-views.
+        </p>
         <Select<MapConfig>
           value={props.mapConfigs.find((s) => s.id === props.mapConfigId)}
           onChange={props.onMapConfigChange}

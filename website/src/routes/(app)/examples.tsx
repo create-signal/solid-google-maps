@@ -20,7 +20,7 @@ export default function ExamplesLayout(props: RouteProps<string>) {
             examples of basic behaviour and usage can be found in our documentation.
           </PageHeaderDescription>
           <PageHeaderActions>
-            <Button as={A} size="sm" href="/docs/introduction">
+            <Button as={A} size="sm" href="/docs/getting-started">
               Get Started
             </Button>
           </PageHeaderActions>
