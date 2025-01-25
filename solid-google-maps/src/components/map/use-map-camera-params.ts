@@ -1,7 +1,7 @@
-import { CameraStateRef } from './use-tracked-camera-state-ref'
-import { toLatLngLiteral } from '../../libraries/lat-lng-utils'
+import { Accessor, createEffect, createMemo, on, onCleanup } from 'solid-js'
 import { MapProps } from '.'
-import { Accessor, createDeferred, createEffect, createMemo, createRenderEffect, on, untrack } from 'solid-js'
+import { toLatLngLiteral } from '../../libraries/lat-lng-utils'
+import { CameraStateRef } from './use-tracked-camera-state-ref'
 
 export function useMapCameraParams(
   map: Accessor<google.maps.Map | null>,
@@ -32,6 +32,8 @@ export function useMapCameraParams(
     Number.isFinite(mapProps.tilt) ? (mapProps.tilt as number) : null,
   )
 
+  let timeout: ReturnType<typeof setTimeout> | null = null
+
   // the following effect runs for every render of the map component and checks
   // if there are differences between the known state of the map instance
   // (cameraStateRef, which is updated by all bounds_changed events) and the
@@ -49,7 +51,8 @@ export function useMapCameraParams(
       ({ map }) => {
         if (!map) return
 
-        requestAnimationFrame(() => {
+        // Timeout gives cameraStateRef a chance to update before we check it
+        timeout = setTimeout(() => {
           const nextCamera: google.maps.CameraOptions = {}
           let needsUpdate = false
 
@@ -80,7 +83,9 @@ export function useMapCameraParams(
           if (needsUpdate) {
             map.moveCamera(nextCamera)
           }
-        })
+        }, 1)
+
+        onCleanup(() => timeout && clearTimeout(timeout))
       },
     ),
   )

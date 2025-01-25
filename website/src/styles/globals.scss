@@ -179,8 +179,37 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
+}
 
+@layer base {
   .gm-style {
-    color: var(--foreground);
+    color: hsl(var(--foreground));
+
+    .gm-style-iw {
+      background: hsl(var(--background));
+
+      .gm-ui-hover-effect > span {
+        background-color: hsl(var(--foreground));
+      }
+
+      .gm-style-iw-ch {
+        font-weight: 600;
+      }
+
+      .gm-style-iw-d {
+        -ms-overflow-style: none; /* Internet Explorer 10+ */
+        scrollbar-width: none; /* Firefox */
+        padding-right: 12px;
+        padding-bottom: 12px;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+    }
+
+    .gm-style-iw-tc::after {
+      background-color: hsl(var(--background));
+    }
   }
 }

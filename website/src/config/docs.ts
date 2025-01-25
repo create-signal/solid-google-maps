@@ -68,6 +68,10 @@ export const docsConfig: Config = {
           href: '/docs/examples/advanced-marker-interaction',
         },
         {
+          title: 'Custom Map Controls',
+          href: '/docs/examples/custom-map-controls',
+        },
+        {
           title: 'Synchronized Maps',
           href: '/docs/examples/synchronized-maps',
         },

@@ -29,8 +29,8 @@ function handleBoundsChange(map: google.maps.Map, ref: Setter<CameraState>) {
     ...state,
     center: center?.toJSON() || { lat: 0, lng: 0 },
     zoom: (zoom as number) || 0,
-    heading: heading as number,
-    tilt: tilt as number,
+    heading: heading,
+    tilt: tilt,
   }))
 }
 

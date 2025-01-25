@@ -14,7 +14,7 @@ const preset_options: preset.PresetOptions = {
     },
   ],
   // Set to `true` to remove all `console.*` calls and `debugger` statements in prod builds
-  drop_console: true,
+  //drop_console: true,
   cjs: false,
 }
 

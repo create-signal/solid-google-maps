@@ -135,8 +135,12 @@ export default function App() {
           }}
         </For>
         <Show when={infoWindowShown() && selectedMarker()}>
-          <InfoWindow anchor={selectedMarker()} pixelOffset={[0, -2]} onCloseClick={handleInfowindowCloseClick}>
-            <h2>Marker {selectedId()}</h2>
+          <InfoWindow
+            anchor={selectedMarker()}
+            pixelOffset={[0, -2]}
+            onCloseClick={handleInfowindowCloseClick}
+            headerContent={<>Marker {selectedId()}</>}
+          >
             <p>Some arbitrary html to be rendered into the InfoWindow.</p>
           </InfoWindow>
         </Show>

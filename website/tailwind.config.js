@@ -4,6 +4,7 @@ import { fontFamily } from 'tailwindcss/defaultTheme'
 export default {
   darkMode: ['variant', ['.dark &', '[data-kb-theme="dark"] &']],
   content: ['./src/**/*.{ts,tsx}'],
+  safelist: ['gm-style'],
   prefix: '',
   theme: {
     container: {
