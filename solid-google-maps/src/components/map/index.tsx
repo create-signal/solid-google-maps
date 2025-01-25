@@ -206,7 +206,7 @@ export const Map: Component<MapProps> = (p) => {
           <div
             ref={mapRef}
             data-testid={'map'}
-            style={combinedStyle()}
+            style={localProps.class ? undefined : combinedStyle()}
             class={localProps.class}
             {...(props.id ? { id: props.id } : {})}
           />
