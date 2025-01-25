@@ -1,6 +1,7 @@
 import {
   JSX,
   ParentComponent,
+  Show,
   createEffect,
   createMemo,
   createSignal,
@@ -199,7 +200,7 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
     anchorContent: CustomMarkerContent,
     pixelOffset?: [number, number],
   ) => {
-    const wrapper = anchorContent
+    const wrapper = anchorContent.parentElement as HTMLElement
     const wrapperBcr = wrapper.getBoundingClientRect()
 
     const anchorDomContent = anchorContent.firstElementChild as Element
@@ -219,8 +220,12 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
 
   return (
     <>
-      <Portal mount={contentContainerRef() || undefined}>{props.children}</Portal>
-      <Portal mount={headerContainerRef() || undefined}>{props.headerContent}</Portal>
+      <Show when={contentContainerRef()}>
+        <Portal mount={contentContainerRef()!}>{props.children}</Portal>
+      </Show>
+      <Show when={headerContainerRef()}>
+        <Portal mount={headerContainerRef()!}>{props.headerContent}</Portal>
+      </Show>
     </>
   )
 }

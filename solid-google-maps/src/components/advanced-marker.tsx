@@ -6,6 +6,7 @@ import {
   Component,
   JSX,
   ParentProps,
+  Show,
   children,
   createContext,
   createEffect,
@@ -117,19 +118,9 @@ type MarkerContentProps = ParentProps<{
 }>
 
 const MarkerContent: Component<MarkerContentProps> = (props) => {
-  const translation = () => props.anchorPoint ?? AdvancedMarkerAnchorPoint['BOTTOM']
-
-  // The "translate(50%, 100%)" is here to counter and reset the default anchoring of the advanced marker element
-  // that comes from the api
-  const transformStyle = () => `translate(50%, 100%) translate(-${translation()[0]}, -${translation()[1]})`
-
   return (
-    // anchoring container
-    <div style={{ transform: transformStyle() }} onClick={props.onClick}>
-      {/* AdvancedMarker div that user can give styles and classes */}
-      <div class={props.class} style={props.styles}>
-        {props.children}
-      </div>
+    <div class={props.class} style={props.styles} onClick={props.onClick}>
+      {props.children}
     </div>
   )
 }
@@ -193,6 +184,20 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
     ),
   )
 
+  createEffect(
+    on(
+      () => ({
+        contentContainer: contentContainer(),
+        anchorPoint: props.anchorPoint || AdvancedMarkerAnchorPoint['BOTTOM'],
+      }),
+      ({ contentContainer, anchorPoint }) => {
+        if (!contentContainer) return
+
+        contentContainer.style.transform = `translate(50%, 100%) translate(-${anchorPoint[0]}, -${anchorPoint[1]})`
+      },
+    ),
+  )
+
   // When no children are present we don't have our own wrapper div
   // which usually gets the user provided className. In this case
   // we set the className directly on the marker.content element that comes
@@ -252,22 +257,30 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
       ({ marker, clickable, onClick, onMouseEnter, onMouseLeave }) => {
         if (!marker) return
 
-        const gmpClickable =
-          clickable !== undefined || Boolean(onClick) || Boolean(onMouseEnter) || Boolean(onMouseLeave)
+        const timeout = setTimeout(() => {
+          const gmpClickable =
+            clickable !== undefined || Boolean(onClick) || Boolean(onMouseEnter) || Boolean(onMouseLeave)
 
-        // gmpClickable is only available in beta version of the
-        // maps api (as of 2024-10-10)
-        marker.gmpClickable = gmpClickable
+          // gmpClickable is only available in beta version of the
+          // maps api (as of 2024-10-10)
+          marker.gmpClickable = gmpClickable
 
-        // enable pointer events for the markers with custom content
-        if (gmpClickable && isElementNode(marker.content)) {
-          marker.content.style.pointerEvents = 'all'
-          marker.content.style.cursor = 'pointer'
+          // enable pointer events for the markers with custom content
+          if (gmpClickable && isElementNode(marker.content)) {
+            if (marker.content.parentElement?.parentElement) {
+              marker.content.parentElement.parentElement.style.pointerEvents = 'none'
+            }
 
-          if (marker.content.firstElementChild) {
-            ;(marker.content.firstElementChild as HTMLElement).style.pointerEvents = 'all'
+            if (marker.content.firstElementChild?.firstElementChild) {
+              ;(marker.content.firstElementChild.firstElementChild as HTMLElement).style.pointerEvents = 'all'
+              ;(marker.content.firstElementChild.firstElementChild as HTMLElement).style.cursor = 'pointer'
+            }
           }
-        }
+        }, 1)
+
+        onCleanup(() => {
+          timeout && clearTimeout(timeout)
+        })
       },
     ),
   )
@@ -331,16 +344,18 @@ export const AdvancedMarker = (props: AdvancedMarkerProps) => {
 
   return (
     <AdvancedMarkerContext.Provider value={{ marker }}>
-      <Portal mount={contentContainer() || undefined}>
-        <MarkerContent
-          anchorPoint={props.anchorPoint}
-          styles={props.style}
-          class={props.class}
-          onClick={(e) => props.onClick?.(createMarkerEvent(e, marker()))}
-        >
-          {props.children}
-        </MarkerContent>
-      </Portal>
+      <Show when={contentContainer()}>
+        <Portal mount={contentContainer()!}>
+          <MarkerContent
+            anchorPoint={props.anchorPoint}
+            styles={props.style}
+            class={props.class}
+            onClick={(e) => props.onClick?.(createMarkerEvent(e, marker()))}
+          >
+            {props.children}
+          </MarkerContent>
+        </Portal>
+      </Show>
     </AdvancedMarkerContext.Provider>
   )
 }

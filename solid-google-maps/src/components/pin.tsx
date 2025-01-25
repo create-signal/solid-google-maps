@@ -1,6 +1,6 @@
 import { AdvancedMarkerContext } from './advanced-marker'
 import { logErrorOnce } from '../libraries/errors'
-import { ParentComponent, createEffect, createSignal, on, onCleanup, splitProps, useContext } from 'solid-js'
+import { ParentComponent, Show, createEffect, createSignal, on, onCleanup, splitProps, useContext } from 'solid-js'
 import { Portal } from 'solid-js/web'
 
 /**
@@ -71,5 +71,9 @@ export const Pin: ParentComponent<PinProps> = (p) => {
     }
   })
 
-  return <Portal mount={glyphContainer() || undefined}>{localProps.children}</Portal>
+  return (
+    <Show when={glyphContainer()}>
+      <Portal mount={glyphContainer()!}>{localProps.children}</Portal>
+    </Show>
+  )
 }
