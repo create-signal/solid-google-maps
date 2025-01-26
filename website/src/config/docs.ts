@@ -117,6 +117,10 @@ export const docsConfig: Config = {
           href: '/docs/examples/heatmap',
         },
         {
+          title: 'THREE (3D) Overlay',
+          href: '/docs/examples/three-overlay',
+        },
+        {
           title: 'Static Map',
           href: '/docs/examples/static-map',
         },
