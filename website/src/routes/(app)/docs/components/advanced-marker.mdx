@@ -36,12 +36,13 @@ Advanced Marker can be given HTML content as a child. If no children are provide
 
 All Marker events extend the type `MarkerEvent` and have the following properties:
 
-| Property   | Type/Description                                                                                                               |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `type`     | `string`<br />The type of the event.                                                                                           |
-| `marker`   | `google.maps.AdvancedMarkerElement`<br />The marker instance that the event was fired on.                                      |
-| `stop`     | `() => void`<br />A function that stops the event from propagating further.                                                    |
-| `domEvent` | `MouseEvent \| TouchEvent \| PointerEvent \| KeyboardEvent \| Event`<br />The original DOM event that triggered the map event. |
+| Property    | Type/Description                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `type`      | `string`<br />The type of the event.                                                                                           |
+| `marker`    | `google.maps.AdvancedMarkerElement`<br />The marker instance that the event was fired on.                                      |
+| `stoppable` | `boolean`<br />Indicates whether the event is stoppable. If true, the event can be stopped from propagating further.           |
+| `stop`      | `() => void`<br />A function that stops the event from propagating further.                                                    |
+| `domEvent`  | `MouseEvent \| TouchEvent \| PointerEvent \| KeyboardEvent \| Event`<br />The original DOM event that triggered the map event. |
 
 ### AdvancedMarkerMouseEvent
 
@@ -51,9 +52,7 @@ Contains a detail property with the latLng of the clicked Marker
 {
   type: string
   marker: google.maps.AdvancedMarkerElement
-  detail: {
-    latLng: google.maps.LatLngLiteral | null;
-  }
+  latLng: google.maps.LatLngLiteral | null
   stoppable: boolean
   stop: () => void
   domEvent?: MouseEvent

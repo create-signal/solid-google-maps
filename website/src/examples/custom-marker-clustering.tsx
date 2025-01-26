@@ -1,15 +1,22 @@
 import { Key } from '@solid-primitives/keyed'
 import { Feature, Point } from 'geojson'
-import { APIProvider, InfoWindow, Map } from 'solid-google-maps'
+import {
+  AdvancedMarker,
+  AdvancedMarkerAnchorPoint,
+  APIProvider,
+  InfoWindow,
+  Map,
+  MapCameraChangedEvent,
+} from 'solid-google-maps'
 import { Component, createSignal, onMount, Show } from 'solid-js'
 import { ClusterProperties } from 'supercluster'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { CastlesGeojson, loadCastlesGeojson } from './custom-marker-clustering/castles'
+import { CastleSvg } from './custom-marker-clustering/components/castle-icon'
 import { InfoWindowContent } from './custom-marker-clustering/components/info-window'
-import { FeaturesClusterMarker } from './custom-marker-clustering/components/feature-cluster-marker'
-import { FeatureMarker } from './custom-marker-clustering/components/feature-marker'
 import { useSupercluster } from './custom-marker-clustering/hooks/use-supercluster'
 import './custom-marker-clustering/styles.css'
+import { se } from 'date-fns/locale'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -23,19 +30,14 @@ export default function App() {
     loadCastlesGeojson().then((data) => setGeojson(data))
   })
 
-  const { clusters, getLeaves /*, getClusterExpansionZoom*/ } = useSupercluster(
-    () => geojson(),
-    bounds,
-    zoom,
-    () => ({
-      extent: 256,
-      radius: 60,
-      maxZoom: 12,
-    }),
-  )
+  const { clusters, getLeaves /*, getClusterExpansionZoom*/ } = useSupercluster(geojson, bounds, zoom, () => ({
+    extent: 256,
+    radius: 60,
+    maxZoom: 12,
+  }))
 
-  const handleBounds = (input: google.maps.LatLngBoundsLiteral) => {
-    const bounds = new google.maps.LatLngBounds(input)
+  const handleBoundsChanged = (input: MapCameraChangedEvent) => {
+    const bounds = new google.maps.LatLngBounds(input.detail.bounds)
     const sw = bounds.getSouthWest()
     const ne = bounds.getNorthEast()
 
@@ -48,6 +50,8 @@ export default function App() {
     const e = ne.lng() + paddingDegrees
 
     setBounds([w, s, e, n])
+    setZoom(input.detail.zoom)
+    setCenter(input.detail.center)
   }
 
   const [infowindowData, setInfowindowData] = createSignal<{
@@ -55,7 +59,9 @@ export default function App() {
     features: Feature<Point>[]
   } | null>(null)
 
-  const handleInfoWindowClose = () => setInfowindowData(null)
+  const handleInfoWindowClose = () => {
+    setInfowindowData(null)
+  }
 
   const handleMarkerClick = (marker: google.maps.marker.AdvancedMarkerElement, featureId: string) => {
     const feature = clusters().find((f) => f.id === featureId)!
@@ -64,7 +70,6 @@ export default function App() {
 
   const handleClusterClick = (marker: google.maps.marker.AdvancedMarkerElement, clusterId: number) => {
     const leaves = getLeaves(clusterId)
-
     setInfowindowData({ anchor: marker, features: leaves })
   }
 
@@ -84,40 +89,59 @@ export default function App() {
         center={center()}
         zoom={zoom()}
         onClick={() => setInfowindowData(null)}
-        onCenterChanged={(e) => setCenter(e.detail.center)}
-        onBoundsChanged={(e) => handleBounds(e.detail.bounds)}
-        onZoomChanged={(e) => setZoom(e.detail.zoom)}
+        onBoundsChanged={handleBoundsChanged}
         gestureHandling={'greedy'}
         disableDefaultUI
+        clickableIcons={false}
       >
         <Key each={clusters()} by={(item) => item.id}>
           {(feature) => {
             const position = () => ({ lng: feature().geometry.coordinates[0], lat: feature().geometry.coordinates[1] })
             const clusterProperties = () => feature().properties as ClusterProperties
             const isCluster = () => clusterProperties().cluster
+            const markerSize = () => Math.floor(48 + Math.sqrt(clusterProperties().point_count) * 2)
 
             return (
               <Show
                 when={isCluster()}
                 fallback={
-                  <FeatureMarker featureId={feature().id as string} position={position()} onClick={handleMarkerClick} />
+                  <AdvancedMarker
+                    position={position()}
+                    onClick={(event) => {
+                      event.stop()
+                      handleMarkerClick(event.marker, feature().id as string)
+                    }}
+                    anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+                    class={'marker feature'}
+                  >
+                    <CastleSvg />
+                  </AdvancedMarker>
                 }
               >
-                <FeaturesClusterMarker
-                  clusterId={clusterProperties().cluster_id}
-                  position={position()}
-                  size={clusterProperties().point_count}
-                  sizeAsText={String(clusterProperties().point_count_abbreviated)}
-                  onClick={handleClusterClick}
-                  //onClick={() => handleClusterZoom(position(), clusterProperties().cluster_id)}
-                />
+                <>
+                  <AdvancedMarker
+                    position={position()}
+                    zIndex={clusterProperties().point_count}
+                    class={'marker cluster'}
+                    style={{ width: `${markerSize()}px`, height: `${markerSize()}px` }}
+                    onClick={(event) => {
+                      event.stop()
+                      handleClusterClick(event.marker, clusterProperties().cluster_id)
+                    }}
+                    ////onClick={() => handleClusterZoom(position(), clusterProperties().cluster_id)}
+                    anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+                  >
+                    <CastleSvg />
+                    <span>{String(clusterProperties().point_count_abbreviated)}</span>
+                  </AdvancedMarker>
+                </>
               </Show>
             )
           }}
         </Key>
 
         <Show when={infowindowData()}>
-          <InfoWindow onCloseClick={handleInfoWindowClose} anchor={infowindowData()!.anchor} shouldFocus={false}>
+          <InfoWindow onCloseClick={handleInfoWindowClose} anchor={infowindowData()!.anchor}>
             <InfoWindowContent features={infowindowData()!.features} />
           </InfoWindow>
         </Show>

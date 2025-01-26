@@ -16,6 +16,10 @@ export const Pin: ParentComponent<PinProps> = (p) => {
   const context = useContext(AdvancedMarkerContext)
   const [glyphContainer, setGlyphContainer] = createSignal<HTMLDivElement | null>(null)
 
+  if (!context) {
+    logErrorOnce('The <Pin> component must be used within an <AdvancedMarker> component.')
+  }
+
   createEffect(() => {
     setGlyphContainer(document.createElement('div'))
 

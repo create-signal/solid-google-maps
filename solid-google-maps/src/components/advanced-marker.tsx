@@ -70,7 +70,12 @@ export const AdvancedMarkerAnchorPoint = {
 
 export type AdvancedMarkerAnchorPoint = (typeof AdvancedMarkerAnchorPoint)[keyof typeof AdvancedMarkerAnchorPoint]
 
-type AdvancedMarkerMouseEvent = google.maps.MapMouseEvent & { marker: google.maps.marker.AdvancedMarkerElement }
+type AdvancedMarkerMouseEvent = Omit<google.maps.MapMouseEvent, 'latLng'> & {
+  type: string
+  stoppable: boolean
+  marker: google.maps.marker.AdvancedMarkerElement
+  latLng: google.maps.LatLngLiteral | null
+}
 
 type AdvancedMarkerEventProps = {
   onClick?: (e: AdvancedMarkerMouseEvent) => void
@@ -307,7 +312,7 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
         if (!marker || children || !onClick) return
 
         const listener = google.maps.event.addListener(marker, 'click', ({ domEvent }: { domEvent: MouseEvent }) =>
-          onClick(createMarkerEvent(domEvent, marker)),
+          onClick(createMarkerEvent('click', domEvent, marker)),
         )
 
         onCleanup(() => {
@@ -317,9 +322,17 @@ function useAdvancedMarker(props: AdvancedMarkerProps) {
     ),
   )
 
-  useMapsEventListener(marker, 'drag', () => (e) => props.onDrag?.(createMarkerEvent(e.domEvent, marker()!)))
-  useMapsEventListener(marker, 'dragstart', () => props.onDragStart)
-  useMapsEventListener(marker, 'dragend', () => props.onDragEnd)
+  useMapsEventListener(marker, 'drag', () => (e) => props.onDrag?.(createMarkerEvent('drag', e.domEvent, marker()!)))
+  useMapsEventListener(
+    marker,
+    'dragstart',
+    () => (e) => props.onDragStart?.(createMarkerEvent('dragstart', e.domEvent, marker()!)),
+  )
+  useMapsEventListener(
+    marker,
+    'dragend',
+    () => (e) => props.onDragEnd?.(createMarkerEvent('dragend', e.domEvent, marker()!)),
+  )
 
   useDomEventListener(
     () => marker()?.element || null,
@@ -348,13 +361,13 @@ export const AdvancedMarker = (props: AdvancedMarkerProps) => {
 
   return (
     <AdvancedMarkerContext.Provider value={{ marker }}>
-      <Show when={contentContainer()}>
+      <Show when={contentContainer()} fallback={props.children}>
         <Portal mount={contentContainer()!}>
           <MarkerContent
             anchorPoint={props.anchorPoint}
             styles={props.style}
             class={props.class}
-            onClick={(e) => props.onClick?.(createMarkerEvent(e, marker()!))}
+            onClick={(e) => props.onClick?.(createMarkerEvent('click', e, marker()!))}
           >
             {props.children}
           </MarkerContent>
@@ -365,6 +378,7 @@ export const AdvancedMarker = (props: AdvancedMarkerProps) => {
 }
 
 const createMarkerEvent = (
+  type: string,
   e: MouseEvent,
   marker: google.maps.marker.AdvancedMarkerElement,
 ): AdvancedMarkerMouseEvent => {
@@ -373,8 +387,10 @@ const createMarkerEvent = (
   const latLng = latLngLiteral ? new google.maps.LatLng(latLngLiteral) : null
 
   return {
+    type,
     marker,
-    latLng: latLng,
+    latLng: latLng?.toJSON() || null,
+    stoppable: true,
     stop: () => e.stopPropagation(),
     domEvent: e,
   }

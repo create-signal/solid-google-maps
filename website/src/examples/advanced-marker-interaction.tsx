@@ -25,32 +25,22 @@ export default function App() {
 
   const [anchorPoint, setAnchorPoint] = createSignal('BOTTOM' as AnchorPointName)
   const [selectedMarker, setSelectedMarker] = createSignal<google.maps.marker.AdvancedMarkerElement | null>(null)
-  const [infoWindowShown, setInfoWindowShown] = createSignal(false)
 
   const onMouseEnter = (id: string | null) => setHoverId(id)
   const onMouseLeave = () => setHoverId(null)
-  const onMarkerClick = (id: string | null, marker?: google.maps.marker.AdvancedMarkerElement) => {
-    if (marker) {
-      setSelectedMarker(marker)
-    }
-
+  const onMarkerClick = (id: string | null, marker: google.maps.marker.AdvancedMarkerElement) => {
     if (id !== selectedId()) {
-      setInfoWindowShown(true)
+      setSelectedMarker(marker)
+      setSelectedId(id)
     } else {
-      setInfoWindowShown((isShown) => !isShown)
+      setSelectedId(null)
+      setSelectedMarker(null)
     }
-
-    setSelectedId(id)
   }
 
-  const onMapClick = () => {
-    setSelectedId(null)
+  const handleInfowindowClose = () => {
     setSelectedMarker(null)
-    setInfoWindowShown(false)
-  }
-
-  const handleInfowindowCloseClick = () => {
-    setInfoWindowShown(false)
+    setSelectedId(null)
   }
 
   return (
@@ -61,7 +51,7 @@ export default function App() {
         defaultZoom={12}
         defaultCenter={{ lat: 53.55909057947169, lng: 10.005767668054645 }}
         gestureHandling={'greedy'}
-        onClick={onMapClick}
+        onClick={handleInfowindowClose}
         clickableIcons={false}
         disableDefaultUI
       >
@@ -73,7 +63,10 @@ export default function App() {
               <>
                 <Show when={marker.type === 'pin'}>
                   <AdvancedMarker
-                    onClick={(event) => onMarkerClick(marker.id, event.marker)}
+                    onClick={(event) => {
+                      event.stop()
+                      onMarkerClick(marker.id, event.marker)
+                    }}
                     onMouseEnter={() => onMouseEnter(marker.id)}
                     onMouseLeave={onMouseLeave}
                     zIndex={zIndex()}
@@ -103,6 +96,7 @@ export default function App() {
                         'transform-origin': AdvancedMarkerAnchorPoint[anchorPoint()].join(' '),
                       }}
                       onClick={(event) => {
+                        event.stop()
                         onMarkerClick(marker.id, event.marker)
                       }}
                       onMouseEnter={() => onMouseEnter(marker.id)}
@@ -129,11 +123,11 @@ export default function App() {
             )
           }}
         </For>
-        <Show when={infoWindowShown() && selectedMarker()}>
+        <Show when={selectedMarker()}>
           <InfoWindow
             anchor={selectedMarker()}
             pixelOffset={[0, -2]}
-            onCloseClick={handleInfowindowCloseClick}
+            onCloseClick={handleInfowindowClose}
             headerContent={<>Marker {selectedId()}</>}
           >
             <p>Some arbitrary html to be rendered into the InfoWindow.</p>
