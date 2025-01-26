@@ -80,7 +80,6 @@
     "maps",
     "google maps"
   ],
-  "packageManager": "pnpm@8.6.0",
   "engines": {
     "node": ">=18",
     "pnpm": ">=8.6.0"
