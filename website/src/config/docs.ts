@@ -113,6 +113,10 @@ export const docsConfig: Config = {
           href: '/docs/examples/custom-marker-clustering',
         },
         {
+          title: 'Heatmap',
+          href: '/docs/examples/heatmap',
+        },
+        {
           title: 'Static Map',
           href: '/docs/examples/static-map',
         },
