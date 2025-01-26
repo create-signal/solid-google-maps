@@ -108,7 +108,7 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
   const openOptions = createMemo<google.maps.InfoWindowOpenOptions>(() => {
     if (!map()) return {}
 
-    return { map: map(), anchor: anchor() }
+    return { map: map(), anchor: anchor(), shouldFocus: props.shouldFocus }
   })
 
   // ## update options

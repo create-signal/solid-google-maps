@@ -191,6 +191,7 @@ export const AdvancedMarkerWithRef = (
     <AdvancedMarker
       {...props}
       onClick={(e) => {
+        e.stop()
         if (marker()) {
           props.onMarkerClick(marker()!)
         }

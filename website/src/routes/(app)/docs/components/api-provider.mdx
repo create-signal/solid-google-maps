@@ -1,0 +1,27 @@
+<MDXHeader title="APIProvider" description="Loads Google Maps Libraries and provided a Context for Map Components" />
+
+<ComponentPreview name="basic-map" />
+
+Every Map component must be wrapped in an `APIProvider` component. This component is responsible for loading the Google Maps libraries and providing a context for the map components.
+
+## API Reference
+
+### Props
+
+| Property             | Default             | Type/Description                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apiKey`             | -                   | `string`<br />An API Key must be provided to load the Google Maps Javascript API. See [Get API Key](https://developers.google.com/maps/documentation/javascript/get-api-key)                                                                                                                                                                                      |
+| `libraries`          | ['google-maps-api'] | `string[]`<br />An array of libraries to load. See [Libraries](https://developers.google.com/maps/documentation/javascript/libraries)                                                                                                                                                                                                                             |
+| `version`            | 'weekly'            | `string`<br />The version of the Google Maps API to load. See [Versions](https://developers.google.com/maps/documentation/javascript/versions)                                                                                                                                                                                                                    |
+| `region`             | -                   | `string`<br />The region code, specified as a two-character ccTLD ("top-level domain") value. See [Region Codes](https://developers.google.com/maps/documentation/javascript/localization)                                                                                                                                                                        |
+| `language`           | -                   | `string`<br />The language code, specified as a BCP-47 language tag. See [Language Codes](https://developers.google.com/maps/documentation/javascript/localization)                                                                                                                                                                                               |
+| `authReferrerPolicy` | -                   | `string`<br />The referrer policy for the Maps JavaScript API requests. See [Referrer Policy](https://developers.google.com/maps/documentation/javascript/get-api-key#referrer-policy)                                                                                                                                                                            |
+| `channel`            | -                   | `string`<br />To understand usage and ways to improve our solutions, Google includes the `solution_channel` query parameter in API calls to gather information about code usage. You may opt out at any time by setting this attribute to an empty string.. See [Channels](https://developers.google.com/maps/reporting-and-monitoring/reporting#solutions-usage) |
+| `solutionChannel`    | -                   | `string`<br />To track usage of Google Maps JavaScript API via numeric channels. The only acceptable channel values are numbers from 0-999. See [Channels](https://developers.google.com/maps/reporting-and-monitoring/reporting#usage-tracking-per-channel)                                                                                                      |
+
+### Events
+
+| Event Name | Type/Description                                                                                                    |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| onLoad     | `() => void`<br />Can be used to execute code after the Google Maps Javascript API has been loaded.                 |
+| onError    | `(error: Error) => void`<br />Can be used to handle errors that occur while loading the Google Maps Javascript API. |
