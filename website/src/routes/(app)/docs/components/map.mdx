@@ -1,0 +1,139 @@
+<MDXHeader title="Map" description="Renders a reactive Google Map" />
+
+<ComponentPreview name="basic-map" />
+
+## API Reference
+
+### Props
+
+| Property                    | Default                                        | Type/Description                                                                                                                                                                                                                  |
+| --------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                        | -                                              | `string`<br />An id for the map, this is required when multiple maps are present in the same APIProvider context.                                                                                                                 |
+| `style`                     | -                                              | `JSX.CSSProperties`<br />Additional style rules to apply to the map dom-element.                                                                                                                                                  |
+| `class`                     | -                                              | `string`<br />Additional css class-name to apply to the element containing the map.                                                                                                                                               |
+| `colorScheme`               | -                                              | `'DARK' \| 'LIGHT' \| 'FOLLOW_SYSTEM'`<br />The color-scheme to use for the map.                                                                                                                                                  |
+| `renderingType`             | -                                              | `'VECTOR' \| 'RASTER' \| 'UNINITIALIZED'`<br />The rendering-type to be used.The rendering-type to be used.                                                                                                                       |
+| `controlled`                | false                                          | `boolean`<br />Indicates that the map will be controlled externally. Disables all controls provided by the map itself.                                                                                                            |
+| `reuseMaps`                 | false                                          | `boolean`<br />Enable caching of map-instances created by this component.                                                                                                                                                         |
+| `defaultCenter`             | -                                              | `{ lat: number; lng: number }`<br />The default center point of the map. Required if `center` and `defaultBounds` are not provided.                                                                                               |
+| `defaultZoom`               | -                                              | `number`<br />The default zoom of the map. Required if `zoom` and `defaultBounds` are not provided.                                                                                                                               |
+| `defaultHeading`            | -                                              | `number`<br />The default heading of the map. Required if `heading` is not provided.                                                                                                                                              |
+| `defaultTitle`              | -                                              | `number`<br />The default tilt of the map. Required if `tilt` is not provided.                                                                                                                                                    |
+| `defaultBounds`             | -                                              | `{ lat: number; lng: number; padding: number \| google.maps.Padding }`<br />The default bounds of the map. If this is provided, no `defaultCenter` or `defaultZoom` are required.                                                 |
+| `backgroundColor`           | -                                              | `string`<br />The background color of the map div. This color will be visible when tiles have not yet loaded as the user pans                                                                                                     |
+| `center`                    | -                                              | `{ lat: number; lng: number }`<br />The center point of the map.                                                                                                                                                                  |
+| `zoom`                      | -                                              | `number`<br />The zoom of the map.                                                                                                                                                                                                |
+| `heading`                   | -                                              | `number`<br />The heading of the map.                                                                                                                                                                                             |
+| `tilt`                      | -                                              | `number`<br />The tilt of the map.                                                                                                                                                                                                |
+| `clickableIcons`            | true                                           | `boolean`<br />If false, disables clickability of POI icons.                                                                                                                                                                      |
+| `disableDefaultUI`          | false                                          | `boolean`<br />If true, disables all default UI of the map.                                                                                                                                                                       |
+| `disableDoubleClickZoom`    | false                                          | `boolean`<br />If true, disables double click zoom on the map.                                                                                                                                                                    |
+| `draggable`                 | true                                           | `boolean`<br />If false, prevents the map from being dragged.                                                                                                                                                                     |
+| `draggableCursor`           | -                                              | `string`<br />The name or url of the cursor to display when mousing over a draggable map.                                                                                                                                         |
+| `draggingCursor`            | -                                              | `string`<br />The name or url of the cursor to display when the map is being dragged.                                                                                                                                             |
+| `fullscreenControl`         | false                                          | `boolean`<br />The enabled state of the Fullscreen control.                                                                                                                                                                       |
+| `fullscreenControlOptions`  | -                                              | `google.maps.FullscreenControlOptions`<br />The options for the Fullscreen control.                                                                                                                                               |
+| `gestureHandling`           | -                                              | `'cooperative' \| 'greedy' \| none' \| 'auto'`<br />The gesture handling behavior for the map.                                                                                                                                    |
+| `headingInteractionEnabled` | false                                          | `boolean`<br />Whether the map should allow user control of the camera heading. The option is only in effect when the map is a vector map                                                                                         |
+| `isFractionalZoomEnabled`   | true for vector maps and false for raster maps | `boolean`<br />Whether the map should allow fractional zoom levels.                                                                                                                                                               |
+| `keyboardShortcuts`         | true                                           | `boolean`<br />If false, prevents the map from being controlled by the keyboard.                                                                                                                                                  |
+| `mapId`                     | -                                              | `string`<br />The mapId to use for the map. Required for Cloud Maps and Advanced Markers. `DEMO_MAP_ID` can be used to try out features that require a map ID                                                                     |
+| `mapTypeControl`            | -                                              | `boolean`<br />The enabled state of the MapType control.                                                                                                                                                                          |
+| `mapTypeControlOptions`     | -                                              | `google.maps.MapTypeControlOptions`<br />The options for the MapType control.                                                                                                                                                     |
+| `mapTypeId`                 | 'ROADMAP'                                      | `google.maps.MapTypeId`<br />The initial MapTypeId for the map.                                                                                                                                                                   |
+| `maxZoom`                   | -                                              | `number`<br />The maximum zoom level of the map.                                                                                                                                                                                  |
+| `minZoom`                   | -                                              | `number`<br />The minimum zoom level of the map.                                                                                                                                                                                  |
+| `noClear`                   | false                                          | `boolean`<br />If true, the map will be rendered with no clear.                                                                                                                                                                   |
+| `panControl`                | -                                              | `boolean`<br />The enabled state of the Pan control.                                                                                                                                                                              |
+| `panControlOptions`         | -                                              | `google.maps.PanControlOptions`<br />The options for the Pan control.                                                                                                                                                             |
+| `renderingType`             | 'RASTER'                                       | `'VECTOR' \| 'RASTER' \| 'UNINITIALIZED'`<br />The rendering-type to be used.                                                                                                                                                     |
+| `restriction`               | -                                              | `google.maps.MapRestriction`<br />Defines a boundary that restricts the area of the map accessible to users. When set, a user can only pan and zoom while the camera view stays inside the limits of the boundary.                |
+| `rotateControl`             | -                                              | `boolean`<br />The enabled state of the Rotate control.                                                                                                                                                                           |
+| `rotateControlOptions`      | -                                              | `google.maps.RotateControlOptions`<br />The options for the Rotate control.                                                                                                                                                       |
+| `scaleControl`              | -                                              | `boolean`<br />The enabled state of the Scale control.                                                                                                                                                                            |
+| `scaleControlOptions`       | -                                              | `google.maps.ScaleControlOptions`<br />The options for the Scale control.                                                                                                                                                         |
+| `scrollwheel`               | true                                           | `boolean`<br />If false, disables scrollwheel zooming on the map.                                                                                                                                                                 |
+| `streetView`                | -                                              | `google.maps.StreetViewPanorama`<br />A StreetView Panorama to display when the Street View pegman is dropped on the map.                                                                                                         |
+| `streetViewControl`         | -                                              | `boolean`<br />The enabled state of the StreetView control.                                                                                                                                                                       |
+| `streetViewControlOptions`  | -                                              | `google.maps.StreetViewControlOptions`<br />The options for the StreetView control.                                                                                                                                               |
+| `styles`                    | -                                              | `google.maps.MapTypeStyle[]`<br />Styles to apply to each of the default map types. For satellite, hybrid and terrain modes, these styles will only apply to labels and geometry. Not available when using a mapId or Vector Maps |
+| `tiltInteractionEnabled`    | false                                          | `boolean`<br />Whether the map should allow user control of the camera tilt. The option is only in effect when the map is a vector map                                                                                            |
+| `zoomControl`               | -                                              | `boolean`<br />The enabled state of the Zoom control.                                                                                                                                                                             |
+| `zoomControlOptions`        | -                                              | `google.maps.ZoomControlOptions`<br />The options for the Zoom control.                                                                                                                                                           |
+
+### Events
+
+| Event Name                         | Type/Description                                                            |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| `onBoundsChanged`                  | `MapCameraChangedEvent`<br />Fired when the bounds of the map have changed. |
+| `onCenterChanged`                  | `MapCameraChangedEvent`<br />Fired when the center of the map has changed.  |
+| `onZoomChanged`                    | `MapCameraChangedEvent`<br />Fired when the zoom of the map has changed.    |
+| `onHeadingChanged`                 | `MapCameraChangedEvent`<br />Fired when the heading of the map has changed. |
+| `onTiltChanged`                    | `MapCameraChangedEvent`<br />Fired when the tilt of the map has changed.    |
+| `onCameraChanged`                  | `MapCameraChangedEvent`<br />Fired when the camera of the map has changed.  |
+| `onClick`                          | `MapMouseEvent`<br />Fired when the map is clicked.                         |
+| `onDblClick`                       | `MapMouseEvent`<br />Fired when the map is double-clicked.                  |
+| `onContextMenu`                    | `MapMouseEvent`<br />Fired when the map is right-clicked.                   |
+| `onDrag`                           | `MapMouseEvent`<br />Fired when the map is dragged.                         |
+| `onDragEnd`                        | `MapMouseEvent`<br />Fired when the map is done being dragged.              |
+| `onDragStart`                      | `MapMouseEvent`<br />Fired when the map is starting to be dragged.          |
+| `onMousemove`                      | `MapMouseEvent`<br />Fired when the mouse moves over the map.               |
+| `onMouseout`                       | `MapMouseEvent`<br />Fired when the mouse moves out of the map.             |
+| `onMouseover`                      | `MapMouseEvent`<br />Fired when the mouse moves over the map.               |
+| `onTilesLoaded`                    | `MapEvent`<br />Fired when the visible tiles have finished loading.         |
+| `onIdle`                           | `MapEvent`<br />Fired when the map becomes idle after panning.              |
+| `onProjectionChanged`              | `MapEvent`<br />Fired when the projection has changed.                      |
+| `onIsFractionalZoomEnabledChanged` | `MapEvent`<br />Fired when the fractional zoom setting has changed.         |
+| `onMapTypeIdChanged`               | `MapEvent`<br />Fired when the map type has changed.                        |
+| `onRenderingTypeChanged`           | `MapEvent`<br />Fired when the rendering type has changed.                  |
+
+## Event Types
+
+All Map events extend the type `MapEvent` and have the following properties:
+
+| Property    | Type/Description                                                                                                               |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `type`      | `string`<br />The type of the event.                                                                                           |
+| `map`       | `google.maps.Map`<br />The map instance that the event was fired on.                                                           |
+| `stoppable` | `boolean`<br />Indicates if the event is stoppable.                                                                            |
+| `stop`      | `() => void`<br />A function that stops the event from propagating further.                                                    |
+| `domEvent`  | `MouseEvent \| TouchEvent \| PointerEvent \| KeyboardEvent \| Event`<br />The original DOM event that triggered the map event. |
+
+### MapMouseEvent
+
+Contains a detail property with the latLng and placeId of the clicked location
+
+```typescript
+{
+  type: string
+  map: google.maps.Map
+  detail: {
+    latLng: google.maps.LatLngLiteral | null;
+    placeId: string | null;
+  }
+  stoppable: boolean
+  stop: () => void
+  domEvent?: MouseEvent | TouchEvent | PointerEvent | KeyboardEvent | Event
+}
+```
+
+### MapCameraChangedEvent
+
+Contains a detail property with the position of the camera
+
+```typescript
+{
+  type: string
+  map: google.maps.Map
+  detail: {
+    center: google.maps.LatLngLiteral
+    bounds: google.maps.LatLngBoundsLiteral
+    zoom: number
+    heading: number
+    tilt: number
+  };
+  stoppable: boolean
+  stop: () => void
+  domEvent?: MouseEvent | TouchEvent | PointerEvent | KeyboardEvent | Event
+}
+```

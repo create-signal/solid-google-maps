@@ -1,0 +1,32 @@
+<MDXHeader title="InfoWindow" description="Renders an InfoWindow" />
+
+<ComponentPreview name="markers-and-infowindows" />
+
+## API Reference
+
+### Props
+
+| Property         | Default | Type/Description                                                                                                                |
+| ---------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `anchor`         | -       | `google.maps.AdvancedMarkerElement`<br />Anchors the InfoWindow to a Marker. `position` is not required if `anchor` is used.    |
+| `ariaLabel`      | -       | `string`<br />The aria-label attribute for the InfoWindow.                                                                      |
+| `class`          | -       | `string`<br />The class name of the Marker Content. Only applicable to HTML content.                                            |
+| `disableAutoPan` | false   | `boolean`<br />If true, the InfoWindow will not pan the map when opened.                                                        |
+| `headerContent`  | -       | `string \| JSX.Element`<br />The content of the InfoWindow header.                                                              |
+| `headerDisabled` | false   | `boolean`<br />If true, the InfoWindow header will be disabled.                                                                 |
+| `maxWidth`       | -       | `string`<br />The maximum width of the InfoWindow.                                                                              |
+| `minWidth`       | -       | `string`<br />The minimum width of the InfoWindow.                                                                              |
+| `open`           | false   | `boolean`<br />If true, the InfoWindow will be open.                                                                            |
+| `pixelOffset`    | -       | `[number, number]`<br />The offset from the marker's position to the tip of an InfoWindow that has been opened with the marker. |
+| `position`       | -       | `google.maps.LatLngLiteral`<br />The marker's position.                                                                         |
+| `shouldFocus`    | false   | `boolean`<br />If true, the InfoWindow will focus on mount.                                                                     |
+| `style`          | -       | `JSX.CSSProperties`<br />The style of the Marker Content. Only applicable to HTML content.                                      |
+| `zIndex`         | -       | `number`<br />The marker's zIndex.                                                                                              |
+
+### Events
+
+| Event Name     | Type/Description                                                             |
+| -------------- | ---------------------------------------------------------------------------- |
+| `onClose`      | `() => void`<br />Fired when the InfoWindow is closed.                       |
+| `onCloseClick` | `() => void`<br />Fired when the close button is clicked.                    |
+| `onOpenChange` | `(open: boolean) => void`<br />Fired when the InfoWindow open state changes. |

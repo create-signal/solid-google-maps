@@ -1,0 +1,68 @@
+<MDXHeader title="Marker" description="Renders a Basic Marker" />
+
+<ComponentPreview name="basic-map" />
+
+Please note, as of February 2024, the Marker API is deprecated and will be removed in a future release. Please use the Advanced Marker API instead. [More Information](https://developers.google.com/maps/deprecations#google-maps-marker)
+
+## API Reference
+
+### Props
+
+| Property            | Default   | Type/Description                                                                                                                 |
+| ------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `ref`               | -         | `(marker: google.maps.Marker \| null) => void`<br />Provides a reference for the Marker instance.                                |
+| `anchorPoint`       | -         | `google.maps.Point`<br />The offset from the marker's position to the tip of an InfoWindow that has been opened with the marker. |
+| `animation`         | null      | `google.maps.Animation`<br />The animation to play when the marker is added to a map.                                            |
+| `clickable`         | true      | `boolean`<br />Indicates whether the marker is clickable.                                                                        |
+| `collisionBehavior` | null      | `google.maps.CollisionBehavior`<br />The behavior of the marker when it collides with another marker.                            |
+| `crossOnDrag`       | true      | `boolean`<br />If false, disables the cross that appears beneath the marker when dragging.                                       |
+| `cursor`            | 'pointer' | `string`<br />Mouse cursor to show on hover.                                                                                     |
+| `draggable`         | false     | `boolean`<br />If true, the marker can be dragged.                                                                               |
+| `icon`              | -         | `google.maps.Icon \| google.maps.Symbol`<br />Icon for the foreground.                                                           |
+| `label`             | -         | `string \| google.maps.MarkerLabel`<br />The label of the marker.                                                                |
+| `opacity`           | 1         | `number`<br />The marker's opacity between 0.0 and 1.0.                                                                          |
+| `optimized`         | -         | `boolean`<br />Optimization renders many markers as a single static element.                                                     |
+| `position`          | -         | `google.maps.LatLngLiteral`<br />The marker's position.                                                                          |
+| `shape`             | -         | `google.maps.MarkerShape`<br />Image map region for drag/click.                                                                  |
+| `title`             | -         | `string`<br />The marker's title.                                                                                                |
+| `visible`           | true      | `boolean`<br />If true, the marker is visible.                                                                                   |
+| `zIndex`            | -         | `number`<br />The marker's zIndex.                                                                                               |
+
+### Events
+
+| Event Name    | Type/Description                                                            |
+| ------------- | --------------------------------------------------------------------------- |
+| `onClick`     | `MarkerMouseEvent`<br />Fired when the marker is clicked.                   |
+| `onDrag`      | `MarkerMouseEvent`<br />Fired repeatedly while the marker is being dragged. |
+| `onDragEnd`   | `MarkerMouseEvent`<br />Fired when the marker stops being dragged.          |
+| `onDragStart` | `MarkerMouseEvent`<br />Fired when the marker starts being dragged.         |
+| `onMouseOut`  | `MarkerMouseEvent`<br />Fired when the mouse leaves the marker.             |
+| `onMouseOver` | `MarkerMouseEvent`<br />Fired when the mouse enters the marker.             |
+
+## Event Types
+
+All Marker events extend the type `MarkerEvent` and have the following properties:
+
+| Property   | Type/Description                                                                                                               |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `type`     | `string`<br />The type of the event.                                                                                           |
+| `marker`   | `google.maps.Marker`<br />The marker instance that the event was fired on.                                                     |
+| `stop`     | `() => void`<br />A function that stops the event from propagating further.                                                    |
+| `domEvent` | `MouseEvent \| TouchEvent \| PointerEvent \| KeyboardEvent \| Event`<br />The original DOM event that triggered the map event. |
+
+### MarkerMouseEvent
+
+Contains a detail property with the latLng of the clicked Marker
+
+```typescript
+{
+  type: string
+  marker: google.maps.Marker
+  detail: {
+    latLng: google.maps.LatLngLiteral | null;
+  }
+  stoppable: boolean
+  stop: () => void
+  domEvent?: MouseEvent
+}
+```

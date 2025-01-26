@@ -23,7 +23,11 @@ export const docsConfig: Config = {
     },
     {
       title: 'Examples',
-      href: '/examples/solidguessr',
+      href: '/docs/examples/basic-map',
+    },
+    {
+      title: 'Experiments',
+      href: '/experiments/solidguessr',
     },
   ],
   sidebarNav: [
@@ -45,7 +49,32 @@ export const docsConfig: Config = {
       ],
     },
     {
-      title: 'Usage',
+      title: 'Components',
+      items: [
+        {
+          title: 'APIProvider',
+          href: '/docs/components/api-provider',
+        },
+        {
+          title: 'Map',
+          href: '/docs/components/map',
+        },
+        {
+          title: 'AdvancedMarker',
+          href: '/docs/components/advanced-marker',
+        },
+        {
+          title: 'InfoWindow',
+          href: '/docs/components/info-window',
+        },
+        {
+          title: 'Pin',
+          href: '/docs/components/pin',
+        },
+      ],
+    },
+    {
+      title: 'Examples',
       items: [
         {
           title: 'Basic Map',
@@ -90,15 +119,15 @@ export const docsConfig: Config = {
       ],
     },
     {
-      title: 'Examples',
+      title: 'Experiments',
       items: [
         {
           title: 'SolidGuessr',
-          href: '/examples/solidguessr',
+          href: '/experiments/solidguessr',
         },
         {
           title: 'Country Quiz',
-          href: '/examples/quiz',
+          href: '/experiments/quiz',
         },
       ],
     },

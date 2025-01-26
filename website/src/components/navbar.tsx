@@ -26,7 +26,7 @@ export default function Navbar() {
               href="/docs/introduction"
               class={cn(
                 'transition-colors hover:text-foreground/80',
-                pathname().startsWith('/docs') && !pathname().startsWith('/docs/components')
+                pathname().startsWith('/docs') && !pathname().startsWith('/docs/examples')
                   ? 'text-foreground'
                   : 'text-foreground/80',
               )}
@@ -34,13 +34,22 @@ export default function Navbar() {
               Docs
             </A>
             <A
-              href="/examples/solidguessr"
+              href="/docs/examples/basic-map"
               class={cn(
                 'transition-colors hover:text-foreground/80',
-                pathname().startsWith('/docs/components') ? 'text-foreground' : 'text-foreground/80',
+                pathname().startsWith('/docs/examples') ? 'text-foreground' : 'text-foreground/80',
               )}
             >
               Examples
+            </A>
+            <A
+              href="/experiments/solidguessr"
+              class={cn(
+                'transition-colors hover:text-foreground/80',
+                pathname().startsWith('/experiments') ? 'text-foreground' : 'text-foreground/80',
+              )}
+            >
+              Experiments
             </A>
           </nav>
         </div>

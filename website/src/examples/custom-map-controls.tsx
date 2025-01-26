@@ -40,6 +40,7 @@ const CustomControlMap = () => {
         onZoomChanged={(ev) => setZoom(ev.detail.zoom)}
         gestureHandling={'greedy'}
         disableDefaultUI={true}
+        renderingType="VECTOR"
       />
       <div class="absolute top-4 right-4 p-4 flex flex-col gap-4">
         <div class="grid grid-cols-2 rounded-full shadow-lg rotate-45">
@@ -56,7 +57,7 @@ const CustomControlMap = () => {
             <ArrowDownRightIcon class="-translate-x-1 -translate-y-1 group-hover/button:translate-x-0 group-hover/button:translate-y-0 transition-transform" />
           </PanButton>
         </div>
-        <Slider minValue={0} maxValue={18} step={1} value={[zoom()]} onChange={(value) => setZoom(value[0])}>
+        <Slider minValue={0} maxValue={18} step={0.01} value={[zoom()]} onChange={(value) => setZoom(value[0])}>
           <SliderTrack>
             <SliderFill />
             <SliderThumb />

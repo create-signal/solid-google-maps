@@ -9,12 +9,12 @@ import { IconArrowRight } from './icons'
 const examples = [
   {
     name: 'SolidGuessr',
-    href: '/examples/solidguessr',
+    href: '/experiments/solidguessr',
     code: 'https://github.com/create-signal/solid-google-maps/blob/main/website/src/examples/solidguessr.tsx',
   },
   {
     name: 'Country Quiz',
-    href: '/examples/quiz',
+    href: '/experiments/quiz',
     code: 'https://github.com/create-signal/solid-google-maps/blob/main/website/src/examples/quiz.tsx',
   },
 ]

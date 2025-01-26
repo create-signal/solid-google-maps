@@ -8,6 +8,7 @@ import { Callout } from './ui/callout'
 import { CopyButton } from './copy-button'
 import { ComponentSource } from './component-source'
 import { ComponentPreview } from './component-preview'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table'
 
 export const MDXComponents = {
   h1: (props: ComponentProps<'h1'>) => {
@@ -84,6 +85,24 @@ export const MDXComponents = {
         />
       </div>
     )
+  },
+  table: (props: ComponentProps<'table'>) => {
+    return <Table {...props} />
+  },
+  thead: (props: ComponentProps<'thead'>) => {
+    return <TableHeader {...props} />
+  },
+  tbody: (props: ComponentProps<'tbody'>) => {
+    return <TableBody {...props} />
+  },
+  tr: (props: ComponentProps<'tr'>) => {
+    return <TableRow {...props} />
+  },
+  th: (props: ComponentProps<'th'>) => {
+    return <TableHead {...props} />
+  },
+  td: (props: ComponentProps<'td'>) => {
+    return <TableCell {...props} />
   },
   Step: (props: ComponentProps<'h3'>) => (
     <h3 class="font-heading mt-8 scroll-m-20 text-xl font-semibold tracking-tight" {...props} />
