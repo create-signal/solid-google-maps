@@ -1,6 +1,7 @@
 import { AdvancedMarker, APIProvider, InfoWindow, Map, Marker, Pin } from 'solid-google-maps'
 import { Component, createSignal, onCleanup, onMount } from 'solid-js'
 import { PinIcon } from 'lucide-solid'
+import { Button } from '~/components/ui/button'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -51,6 +52,7 @@ const MarkerWithInfowindow: Component = () => {
 }
 
 export default function App() {
+  const [open, setOpen] = createSignal(true)
   return (
     <APIProvider apiKey={API_KEY} libraries={['marker']}>
       <Map
@@ -100,7 +102,7 @@ export default function App() {
         </AdvancedMarker>
 
         {/* simple positioned infowindow */}
-        <InfoWindow position={{ lat: 40, lng: 0 }} maxWidth={200}>
+        <InfoWindow position={{ lat: 40, lng: 0 }} maxWidth={200} open={open()} onOpenChange={setOpen}>
           <p>
             This is the content for another infowindow with <em>HTML</em>
             -elements.
@@ -113,6 +115,9 @@ export default function App() {
         {/* simple stateful infowindow */}
         <MarkerWithInfowindow />
       </Map>
+      <div class="absolute bottom-0 right-0 p-4">
+        <Button onClick={() => setOpen(!open())}>Toggle Standalone InfoWindow</Button>
+      </div>
     </APIProvider>
   )
 }

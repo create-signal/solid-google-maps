@@ -1,7 +1,6 @@
 import {
   AdvancedMarker,
   AdvancedMarkerAnchorPoint,
-  AdvancedMarkerProps,
   APIProvider,
   CollisionBehavior,
   InfoWindow,
@@ -11,8 +10,8 @@ import {
 import { Component, createSignal, For, Show } from 'solid-js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
-export type AnchorPointName = keyof typeof AdvancedMarkerAnchorPoint
 import './advanced-marker-interaction/style.css'
+export type AnchorPointName = keyof typeof AdvancedMarkerAnchorPoint
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -73,10 +72,8 @@ export default function App() {
             return (
               <>
                 <Show when={marker.type === 'pin'}>
-                  <AdvancedMarkerWithRef
-                    onMarkerClick={(markerRef: google.maps.marker.AdvancedMarkerElement) =>
-                      onMarkerClick(marker.id, markerRef)
-                    }
+                  <AdvancedMarker
+                    onClick={(event) => onMarkerClick(marker.id, event.marker)}
                     onMouseEnter={() => onMouseEnter(marker.id)}
                     onMouseLeave={onMouseLeave}
                     zIndex={zIndex()}
@@ -92,11 +89,11 @@ export default function App() {
                       borderColor={selectedId() === marker.id ? '#1e89a1' : null}
                       glyphColor={selectedId() === marker.id ? '#0f677a' : null}
                     />
-                  </AdvancedMarkerWithRef>
+                  </AdvancedMarker>
                 </Show>
                 <Show when={marker.type === 'html'}>
                   <>
-                    <AdvancedMarkerWithRef
+                    <AdvancedMarker
                       position={marker.position}
                       zIndex={zIndex()}
                       anchorPoint={AdvancedMarkerAnchorPoint[anchorPoint()]}
@@ -105,21 +102,19 @@ export default function App() {
                         transform: `scale(${[hoverId(), selectedId()].includes(marker.id) ? 1.3 : 1})`,
                         'transform-origin': AdvancedMarkerAnchorPoint[anchorPoint()].join(' '),
                       }}
-                      onMarkerClick={(markerRef: google.maps.marker.AdvancedMarkerElement) =>
-                        onMarkerClick(marker.id, markerRef)
-                      }
+                      onClick={(event) => {
+                        onMarkerClick(marker.id, event.marker)
+                      }}
                       onMouseEnter={() => onMouseEnter(marker.id)}
                       collisionBehavior={CollisionBehavior.OPTIONAL_AND_HIDES_LOWER_PRIORITY}
                       onMouseLeave={onMouseLeave}
                     >
                       <div class={`custom-html-content ${selectedId() === marker.id ? 'selected' : ''}`}></div>
-                    </AdvancedMarkerWithRef>
+                    </AdvancedMarker>
 
                     {/* anchor point visualization marker */}
-                    <AdvancedMarkerWithRef
-                      onMarkerClick={(markerRef: google.maps.marker.AdvancedMarkerElement) =>
-                        onMarkerClick(marker.id, markerRef)
-                      }
+                    <AdvancedMarker
+                      onClick={(event) => onMarkerClick(marker.id, event.marker)}
                       zIndex={zIndex() + 1}
                       onMouseEnter={() => onMouseEnter(marker.id)}
                       onMouseLeave={onMouseLeave}
@@ -127,7 +122,7 @@ export default function App() {
                       position={marker.position}
                     >
                       <div class="visualization-marker"></div>
-                    </AdvancedMarkerWithRef>
+                    </AdvancedMarker>
                   </>
                 </Show>
               </>
@@ -178,27 +173,6 @@ export function getData() {
 
 function rnd(min: number, max: number) {
   return Math.random() * (max - min) + min
-}
-
-export const AdvancedMarkerWithRef = (
-  props: AdvancedMarkerProps & {
-    onMarkerClick: (marker: google.maps.marker.AdvancedMarkerElement) => void
-  },
-) => {
-  const [marker, setMarker] = createSignal<google.maps.marker.AdvancedMarkerElement | null>(null)
-
-  return (
-    <AdvancedMarker
-      {...props}
-      onClick={(e) => {
-        if (marker()) {
-          props.onMarkerClick(marker()!)
-        }
-        props.onClick?.(e)
-      }}
-      ref={setMarker}
-    ></AdvancedMarker>
-  )
 }
 
 const ControlPanel: Component<{
