@@ -38,7 +38,7 @@ export function assembleMarkerParams(markers: StaticMapsMarker[] = []) {
       const key = relevantProps.filter(Boolean).join('-')
 
       styles[key] = styles[key] || []
-      styles[key].push(marker)
+      styles[key]?.push(marker)
       return styles
     },
     {} as Record<string, StaticMapsMarker[]>,

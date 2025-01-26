@@ -41,7 +41,7 @@ export function assemblePathParams(paths: Array<StaticMapsPath> = []) {
       const key = [color, weight, fillcolor, geodesic].filter(Boolean).join('-')
 
       styles[key] = styles[key] || []
-      styles[key].push(path)
+      styles[key]?.push(path)
       return styles
     },
     {} as Record<string, Array<StaticMapsPath>>,
