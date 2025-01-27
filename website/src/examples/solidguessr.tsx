@@ -11,7 +11,7 @@ import {
   PlusIcon,
   UndoIcon,
 } from 'lucide-solid'
-import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map, useMap } from 'solid-google-maps'
+import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, Map } from 'solid-google-maps'
 import { Component, createEffect, createMemo, createSignal, For, on, onCleanup, onMount, Show } from 'solid-js'
 
 import { Button } from '~/components/ui/button'
@@ -157,7 +157,10 @@ const GeoguessrGameView: Component = () => {
   // When we have both the random location and the guess, we want to draw a line between them
   createEffect(() => {
     if (guess() && polyline()) {
-      polyline()!.setPath([randomLocation(), guess()!])
+      // This timeout prevents a bug where the polyline is drawn massive and blurry
+      setTimeout(() => {
+        polyline()!.setPath([randomLocation(), guess()!])
+      }, 100)
     }
   })
 

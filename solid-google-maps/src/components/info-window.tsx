@@ -75,6 +75,7 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
         // unmount: remove infoWindow and content elements (note: close is called in a different effect-cleanup)
         onCleanup(() => {
           infoWindow.setContent(null)
+          infoWindow.close()
 
           contentContainerRef()?.remove()
           headerContainerRef()?.remove()
@@ -144,6 +145,14 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
     ),
   )
 
+  createEffect((prev) => {
+    if (prev && !anchor()) {
+      infoWindow()?.close()
+    }
+
+    return anchor()
+  })
+
   const handleClose = () => {
     props.onClose?.()
     props.onOpenChange?.(false)
@@ -172,21 +181,24 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
       },
     ),
   )
+
   // ## handle controlled state
   createDeferred(
     on(
       () => ({
+        infoWindow: infoWindow(),
+        openOptions: openOptions(),
         open: props.open,
         anchor: anchor(),
       }),
-      ({ open }) => {
-        if (!infoWindow() || !openOptions().map) return
+      ({ infoWindow, open, openOptions }) => {
+        if (!infoWindow || !openOptions.map) return
 
         if (open || typeof open === 'undefined') {
           props.onOpenChange?.(true)
-          infoWindow()!.open(openOptions())
-        } else if (infoWindow()!.isOpen) {
-          infoWindow()!.close()
+          infoWindow.open(openOptions)
+        } else if (infoWindow.isOpen) {
+          infoWindow.close()
         }
       },
     ),
