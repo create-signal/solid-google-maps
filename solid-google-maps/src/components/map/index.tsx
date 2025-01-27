@@ -59,6 +59,10 @@ export type MapProps = ParentProps<
     MapEventProps &
     DeckGlCompatProps & {
       /**
+       * Ref to the map instance.
+       */
+      ref?: (map: google.maps.Map | null) => void
+      /**
        * An id for the map, this is required when multiple maps are present
        * in the same APIProvider context.
        */
@@ -125,6 +129,14 @@ export const Map: Component<MapProps> = (p) => {
 
   const isDeckGlControlled = useDeckGLCameraUpdate(map, props)
   const isControlledExternally = () => !!props.controlled
+
+  createEffect(() => {
+    props.ref?.(map())
+
+    onCleanup(() => {
+      props.ref?.(null)
+    })
+  })
 
   // disable interactions with the map for externally controlled maps
   createEffect(() => {

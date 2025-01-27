@@ -134,7 +134,7 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
 ) => {
   const start = new Date().getTime()
   const end = start + props.durationMinutes * 60 * 1000 + 200
-  const map = useMap()
+  const [map, setMap] = createSignal<google.maps.Map | null>(null)
   let inputRef: HTMLInputElement | null = null
 
   const [currentCountry, setCurrentCountry] = createSignal<Country>(
@@ -321,6 +321,7 @@ const QuizGame: Component<{ durationMinutes: number; hints: number; onGameFinish
   return (
     <div class="relative h-[calc(100vh-10rem)]">
       <Map
+        ref={setMap}
         mapId="3facc9a170e81af7"
         class="w-full h-full"
         defaultZoom={10}

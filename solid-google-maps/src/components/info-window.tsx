@@ -2,6 +2,7 @@ import {
   JSX,
   ParentComponent,
   Show,
+  createDeferred,
   createEffect,
   createMemo,
   createSignal,
@@ -105,6 +106,7 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
 
   const map = useMap()
   const anchor = createMemo(() => props.anchor || context?.marker())
+
   const openOptions = createMemo<google.maps.InfoWindowOpenOptions>(() => {
     if (!map()) return {}
 
@@ -171,26 +173,21 @@ export const InfoWindow: ParentComponent<InfoWindowProps> = (p) => {
     ),
   )
   // ## handle controlled state
-  createEffect(
+  createDeferred(
     on(
       () => ({
-        infoWindow: infoWindow(),
-        openOptions: openOptions(),
         open: props.open,
         anchor: anchor(),
       }),
-      ({ infoWindow, openOptions, open }) => {
-        if (!infoWindow || !openOptions.map) return
+      ({ open }) => {
+        if (!infoWindow() || !openOptions().map) return
 
         if (open || typeof open === 'undefined') {
-          infoWindow.open(openOptions)
-        } else {
-          infoWindow.close()
+          props.onOpenChange?.(true)
+          infoWindow()!.open(openOptions())
+        } else if (infoWindow()!.isOpen) {
+          infoWindow()!.close()
         }
-
-        onCleanup(() => {
-          infoWindow.close()
-        })
       },
     ),
   )

@@ -67,7 +67,7 @@ const GeoguessrGameView: Component = () => {
     locations[Math.floor(Math.random() * locations.length)],
   )
 
-  const map = useMap('streetview')
+  const [map, setMap] = createSignal<google.maps.Map | null>(null)
   const panorama = createMemo(() => map()?.getStreetView())
   const [heading, setHeading] = createSignal(270)
   const [positionStack, setPositionStack] = createSignal<google.maps.LatLngLiteral[]>([])
@@ -296,7 +296,7 @@ const GeoguessrGameView: Component = () => {
   return (
     <div class="flex flex-col w-full relative h-[calc(100vh-10rem)]">
       <Map
-        id="streetview"
+        ref={setMap}
         class="h-full w-full grow"
         mapId="DEMO_MAP_ID"
         defaultZoom={3}

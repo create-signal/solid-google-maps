@@ -1,6 +1,6 @@
 import { ThreeJSOverlayView } from '@googlemaps/three'
 import { APIProvider, Map, useMap } from 'solid-google-maps'
-import { createEffect, onCleanup, onMount } from 'solid-js'
+import { createEffect, createSignal, onCleanup, onMount } from 'solid-js'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -15,9 +15,9 @@ export default function App() {
 }
 
 const OverlayMap = () => {
-  const map = useMap()
+  const [map, setMap] = createSignal<google.maps.Map | null>(null)
   const scene = new THREE.Scene()
-  let markerObject: THREE.Group
+  let markerObject: THREE.Group | undefined
   let overlay: any
 
   onMount(() => {
@@ -66,6 +66,7 @@ const OverlayMap = () => {
 
   return (
     <Map
+      ref={setMap}
       style={{ height: '500px', width: '100%' }}
       defaultZoom={18}
       defaultTilt={53}

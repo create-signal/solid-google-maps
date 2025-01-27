@@ -208,6 +208,24 @@
       }
     }
 
+    .transit-container div {
+      background: hsl(var(--background));
+    }
+
+    .poi-info-window .address,
+    .poi-info-window div {
+      color: hsl(var(--muted-foreground));
+    }
+    .poi-info-window div,
+    .poi-info-window a {
+      background: hsl(var(--background));
+      //color: hsl(var(--muted-foreground));
+    }
+    .gm-style-iw-tc {
+      --tw-drop-shadow: drop-shadow(0 1px 1px rgb(0 0 0 / 0.05));
+      filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate)
+        var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+    }
     .gm-style-iw-tc::after {
       background-color: hsl(var(--background));
     }

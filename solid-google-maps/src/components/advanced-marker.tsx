@@ -19,6 +19,7 @@ import { Portal } from 'solid-js/web'
 import { useDomEventListener } from '../hooks/use-dom-event-listener'
 import { useMapsEventListener } from '../hooks/use-maps-event-listener'
 import { usePropBinding } from '../hooks/use-prop-binding'
+import { isLatLngLiteral } from '../libraries/lat-lng-utils'
 
 export interface AdvancedMarkerContextValue {
   marker: Accessor<google.maps.marker.AdvancedMarkerElement | null>
@@ -382,14 +383,13 @@ const createMarkerEvent = (
   e: MouseEvent,
   marker: google.maps.marker.AdvancedMarkerElement,
 ): AdvancedMarkerMouseEvent => {
-  const position = marker?.position || null
-  const latLngLiteral = !position ? null : 'toJSON' in position ? position.toJSON() : position
-  const latLng = latLngLiteral ? new google.maps.LatLng(latLngLiteral) : null
+  const position = marker.position || null
+  const latLngLiteral = isLatLngLiteral(position) ? position : position?.toJSON() || null
 
   return {
     type,
     marker,
-    latLng: latLng?.toJSON() || null,
+    latLng: latLngLiteral,
     stoppable: true,
     stop: () => e.stopPropagation(),
     domEvent: e,

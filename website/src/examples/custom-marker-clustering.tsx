@@ -16,7 +16,6 @@ import { CastleSvg } from './custom-marker-clustering/components/castle-icon'
 import { InfoWindowContent } from './custom-marker-clustering/components/info-window'
 import { useSupercluster } from './custom-marker-clustering/hooks/use-supercluster'
 import './custom-marker-clustering/styles.css'
-import { se } from 'date-fns/locale'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 

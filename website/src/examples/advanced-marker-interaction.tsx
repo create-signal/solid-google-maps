@@ -108,7 +108,10 @@ export default function App() {
 
                     {/* anchor point visualization marker */}
                     <AdvancedMarker
-                      onClick={(event) => onMarkerClick(marker.id, event.marker)}
+                      onClick={(event) => {
+                        event.stop()
+                        onMarkerClick(marker.id, event.marker)
+                      }}
                       zIndex={zIndex() + 1}
                       onMouseEnter={() => onMouseEnter(marker.id)}
                       onMouseLeave={onMouseLeave}

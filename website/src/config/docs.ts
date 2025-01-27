@@ -101,6 +101,10 @@ export const docsConfig: Config = {
           href: '/docs/examples/custom-map-controls',
         },
         {
+          title: 'Autocomplete',
+          href: '/docs/examples/autocomplete',
+        },
+        {
           title: 'Synchronized Maps',
           href: '/docs/examples/synchronized-maps',
         },

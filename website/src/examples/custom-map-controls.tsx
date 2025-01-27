@@ -1,13 +1,13 @@
 import { ArrowDownLeftIcon, ArrowDownRightIcon, ArrowUpLeftIcon, ArrowUpRightIcon } from 'lucide-solid'
-import { APIProvider, Map, useMap } from 'solid-google-maps'
+import { APIProvider, Map } from 'solid-google-maps'
 import { ComponentProps, createSignal, ParentComponent } from 'solid-js'
 import { Slider, SliderFill, SliderThumb, SliderTrack } from '~/components/ui/slider'
 import { cn } from '~/lib/utils'
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
-const CustomControlMap = () => {
-  const map = useMap()
+export default function App() {
+  const [map, setMap] = createSignal<google.maps.Map | null>(null)
   const [zoom, setZoom] = createSignal(4)
   const [center, setCenter] = createSignal({ lat: 22.54992, lng: 0 })
 
@@ -30,8 +30,9 @@ const CustomControlMap = () => {
     Math.floor(Math.min(map()?.getDiv().offsetWidth || 0, map()?.getDiv().offsetHeight || 0))
 
   return (
-    <>
+    <APIProvider apiKey={API_KEY}>
       <Map
+        ref={setMap}
         mapId="DEMO_MAP_ID"
         style={{ height: '500px', width: '100%' }}
         center={center()}
@@ -40,6 +41,7 @@ const CustomControlMap = () => {
         onZoomChanged={(ev) => setZoom(ev.detail.zoom)}
         gestureHandling={'greedy'}
         disableDefaultUI={true}
+        // renderingType=VECTOR is required to enable smooth zooming on fractional zoom units
         renderingType="VECTOR"
       />
       <div class="absolute top-4 right-4 p-4 flex flex-col gap-4">
@@ -57,14 +59,14 @@ const CustomControlMap = () => {
             <ArrowDownRightIcon class="-translate-x-1 -translate-y-1 group-hover/button:translate-x-0 group-hover/button:translate-y-0 transition-transform" />
           </PanButton>
         </div>
-        <Slider minValue={0} maxValue={18} step={0.01} value={[zoom()]} onChange={(value) => setZoom(value[0])}>
+        <Slider minValue={4} maxValue={13} step={0.01} value={[zoom()]} onChange={(value) => setZoom(value[0])}>
           <SliderTrack>
             <SliderFill />
             <SliderThumb />
           </SliderTrack>
         </Slider>
       </div>
-    </>
+    </APIProvider>
   )
 }
 
@@ -79,13 +81,5 @@ const PanButton: ParentComponent<ComponentProps<'button'>> = (props) => {
     >
       {props.children}
     </button>
-  )
-}
-
-export default function App() {
-  return (
-    <APIProvider apiKey={API_KEY}>
-      <CustomControlMap />
-    </APIProvider>
   )
 }

@@ -1,6 +1,6 @@
-import { Marker, MarkerClusterer } from '@googlemaps/markerclusterer'
-import { AdvancedMarker, APIProvider, InfoWindow, Map, useMap } from 'solid-google-maps'
-import { Component, createDeferred, createEffect, createMemo, createSignal, For, JSX, Show } from 'solid-js'
+import { Marker } from '@googlemaps/markerclusterer'
+import { AdvancedMarker, APIProvider, InfoWindow, Map, MarkerClusterer } from 'solid-google-maps'
+import { Component, createEffect, createMemo, createSignal, Show } from 'solid-js'
 import { Card, CardContent, CardHeader, CardTitle } from '~/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/select'
 import { CategoryData, getCategories, loadTreeDataset, Tree } from './trees'
@@ -38,21 +38,25 @@ export default function App() {
         gestureHandling={'greedy'}
         disableDefaultUI
       >
-        <ClusteredMarkers ref={setMarkers}>
-          {(addToCluster) => (
-            <For each={filteredTrees()}>
-              {(tree) => (
-                <AdvancedMarker
-                  position={tree.position}
-                  ref={(ref) => addToCluster(ref, tree.key)}
-                  onClick={() => setSelectedTreeKey(tree.key)}
-                >
-                  <span class="text-lg">🌳</span>
-                </AdvancedMarker>
-              )}
-            </For>
+        <MarkerClusterer
+          each={filteredTrees()}
+          key="key"
+          ref={setMarkers}
+          clusterMarker={(props, count) => (
+            <AdvancedMarker {...props}>
+              <span class="flex size-8 bg-background rounded-full border-2 border-foreground justify-center items-center">
+                {count}
+              </span>
+            </AdvancedMarker>
           )}
-        </ClusteredMarkers>
+        >
+          {(tree, props, key) => (
+            <AdvancedMarker position={tree.position} {...props} onClick={() => setSelectedTreeKey(key)}>
+              <span class="text-lg">🌳</span>
+            </AdvancedMarker>
+          )}
+        </MarkerClusterer>
+
         <Show when={selectedTreeKey() && markers()[selectedTreeKey()!]}>
           <InfoWindow anchor={markers()[selectedTreeKey()!]} onCloseClick={() => setSelectedTreeKey(null)}>
             {selectedTree()?.name}
@@ -76,9 +80,8 @@ const ControlPanel: Component<{
       </CardHeader>
       <CardContent class="flex flex-col gap-4 space-y-4">
         <div>
-          This example uses the @googlemaps/markerclusterer library to demonstrate how to render a large dataset of
-          markers on the map. This example also includes a filter function to show dynamic updating of the clustered
-          markers and an InfoWindow to show details about the locations.
+          This example uses the MarkerClusterer component to render a large dataset of markers on the map. It is
+          possible to render your own cluster markers using the clusterMarker prop.
         </div>
         <Select<CategoryData>
           onChange={(value) => props.onCategoryChange(value?.key || null)}
@@ -105,49 +108,4 @@ const ControlPanel: Component<{
       </CardContent>
     </Card>
   )
-}
-
-export const ClusteredMarkers: Component<{
-  children: (addToCluster: (marker: Marker | null, key: string) => void) => JSX.Element
-  ref?: (markers: { [key: string]: Marker }) => void
-}> = (props) => {
-  const [markers, setMarkers] = createSignal<{ [key: string]: Marker }>({})
-
-  createDeferred(() => {
-    props.ref?.(markers())
-  })
-
-  // create the markerClusterer once the map is available and update it when
-  // the markers are changed
-  const map = useMap()
-  const clusterer = createMemo(() => {
-    if (!map()) return null
-
-    return new MarkerClusterer({ map: map() })
-  })
-
-  createEffect(() => {
-    if (!clusterer()) return
-
-    clusterer()!.clearMarkers()
-    clusterer()!.addMarkers(Object.values(markers()))
-  })
-
-  // this callback will effectively get passed as ref to the markers to keep
-  // tracks of markers currently on the map
-  const setMarkerRef = (marker: Marker | null, key: string) => {
-    setMarkers((markers) => {
-      if ((marker && markers[key]) || (!marker && !markers[key])) return markers
-
-      if (marker) {
-        return { ...markers, [key]: marker }
-      } else {
-        const { [key]: _, ...newMarkers } = markers
-
-        return newMarkers
-      }
-    })
-  }
-
-  return props.children(setMarkerRef)
 }

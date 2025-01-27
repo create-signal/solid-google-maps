@@ -1,4 +1,4 @@
-import { AdvancedMarker, APIProvider, InfoWindow, Map, Marker, Pin } from 'solid-google-maps'
+import { AdvancedMarker, AdvancedMarkerAnchorPoint, APIProvider, InfoWindow, Map, Marker, Pin } from 'solid-google-maps'
 import { Component, createSignal, onCleanup, onMount } from 'solid-js'
 import { PinIcon } from 'lucide-solid'
 import { Button } from '~/components/ui/button'
@@ -23,7 +23,7 @@ const MovingMarker: Component = () => {
     onCleanup(() => clearInterval(interval))
   })
 
-  return <Marker position={position()}></Marker>
+  return <AdvancedMarker position={position()}></AdvancedMarker>
 }
 
 const MarkerWithInfowindow: Component = () => {
@@ -35,8 +35,10 @@ const MarkerWithInfowindow: Component = () => {
         onClick={() => setInfoWindowOpen(!infoWindowOpen())}
         position={{ lat: 28, lng: -82 }}
         title={'AdvancedMarker that opens an Infowindow when clicked.'}
+        anchorPoint={AdvancedMarkerAnchorPoint.BOTTOM_CENTER}
       >
-        <PinIcon class="size-8"></PinIcon>
+        <PinIcon class="size-8 fill-green-500"></PinIcon>
+
         <InfoWindow
           open={infoWindowOpen()}
           onOpenChange={setInfoWindowOpen}
@@ -61,6 +63,7 @@ export default function App() {
         defaultZoom={3}
         defaultCenter={{ lat: 12, lng: 0 }}
         gestureHandling={'greedy'}
+        clickableIcons={false}
         disableDefaultUI
       >
         {/* simple marker */}

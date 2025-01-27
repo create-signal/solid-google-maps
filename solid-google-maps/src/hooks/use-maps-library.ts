@@ -2,6 +2,7 @@ import { Accessor, createEffect, createMemo, useContext } from 'solid-js'
 import { APIProviderContext } from '../components/api-provider'
 import { useApiIsLoaded } from './use-api-is-loaded'
 import { on } from 'solid-js'
+import { logErrorOnce } from '../libraries/errors'
 
 interface ApiLibraries {
   core: google.maps.CoreLibrary
@@ -23,6 +24,8 @@ export function useMapsLibrary<K extends keyof ApiLibraries, V extends ApiLibrar
 export function useMapsLibrary(name: string) {
   const apiIsLoaded = useApiIsLoaded()
   const ctx = useContext(APIProviderContext)
+
+  if (!ctx) logErrorOnce('[solid-google-maps] useMapsLibrary must be used within an APIProvider')
 
   createEffect(
     on(

@@ -21,19 +21,19 @@ class CachedMapStack {
   static entries: { [key: string]: google.maps.Map[] } = {}
 
   static has(key: string) {
-    return this.entries[key] && this.entries[key]!.length > 0
+    return this.entries[key] && this.entries[key].length > 0
   }
 
   static pop(key: string) {
     if (!this.entries[key]) return null
 
-    return this.entries[key]?.pop() || null
+    return this.entries[key].pop() || null
   }
 
   static push(key: string, value: google.maps.Map) {
     if (!this.entries[key]) this.entries[key] = []
 
-    this.entries[key]!.push(value)
+    this.entries[key].push(value)
   }
 }
 

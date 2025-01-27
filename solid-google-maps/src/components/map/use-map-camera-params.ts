@@ -83,7 +83,7 @@ export function useMapCameraParams(
           if (needsUpdate) {
             map.moveCamera(nextCamera)
           }
-        }, 1)
+        }, 0)
 
         onCleanup(() => timeout && clearTimeout(timeout))
       },
