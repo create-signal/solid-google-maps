@@ -33,7 +33,7 @@
 
 .advanced-marker-example .nav-buttons button {
   padding: 8px;
-  background: var(--background-color-primary);
+  background: #fff;
   color: var(--estate-green-light);
   border: none;
   box-shadow:

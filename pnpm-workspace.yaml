@@ -1,3 +1,4 @@
 packages:
   - 'solid-google-maps'
   - 'website'
+  - 'test'

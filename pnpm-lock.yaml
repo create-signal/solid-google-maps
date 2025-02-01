@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@playwright/test':
-        specifier: 1.41.1
-        version: 1.41.1
+        specifier: 1.50.1
+        version: 1.50.1
       '@types/google.maps':
         specifier: 3.55.11
         version: 3.55.11
@@ -78,6 +78,27 @@ importers:
       solid-js:
         specifier: ^1.8
         version: 1.9.4
+
+  test:
+    dependencies:
+      '@solidjs/meta':
+        specifier: ^0.29.4
+        version: 0.29.4(solid-js@1.9.4)
+      '@solidjs/router':
+        specifier: ^0.15.0
+        version: 0.15.3(solid-js@1.9.4)
+      '@solidjs/start':
+        specifier: ^1.0.11
+        version: 1.0.11(solid-js@1.9.4)(vinxi@0.4.3)(vite@4.5.9)
+      solid-google-maps:
+        specifier: workspace:*
+        version: link:../solid-google-maps
+      solid-js:
+        specifier: ^1.9.2
+        version: 1.9.4
+      vinxi:
+        specifier: ^0.4.3
+        version: 0.4.3(sass-embedded@1.83.4)(typescript@5.7.3)
 
   website:
     dependencies:
@@ -1985,12 +2006,12 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@playwright/test@1.41.1:
-    resolution: {integrity: sha512-9g8EWTjiQ9yFBXc6HjCWe41msLpxEX0KhmfmPl9RPLJdfzL4F0lg2BdJ91O9azFdl11y1pmpwdjBiSxvqc+btw==}
-    engines: {node: '>=16'}
+  /@playwright/test@1.50.1:
+    resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
+    engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright: 1.41.1
+      playwright: 1.50.1
     dev: true
 
   /@redocly/ajv@8.11.2:
@@ -6303,18 +6324,18 @@ packages:
       mlly: 1.7.4
       pathe: 2.0.2
 
-  /playwright-core@1.41.1:
-    resolution: {integrity: sha512-/KPO5DzXSMlxSX77wy+HihKGOunh3hqndhqeo/nMxfigiKzogn8kfL0ZBDu0L1RKgan5XHCPmn6zXd2NUJgjhg==}
-    engines: {node: '>=16'}
+  /playwright-core@1.50.1:
+    resolution: {integrity: sha512-ra9fsNWayuYumt+NiM069M6OkcRb1FZSK8bgi66AtpFoWkg2+y0bJSNmkFrWhMbEBbVKC/EruAHH3g0zmtwGmQ==}
+    engines: {node: '>=18'}
     hasBin: true
     dev: true
 
-  /playwright@1.41.1:
-    resolution: {integrity: sha512-gdZAWG97oUnbBdRL3GuBvX3nDDmUOuqzV/D24dytqlKt+eI5KbwusluZRGljx1YoJKZ2NRPaeWiFTeGZO7SosQ==}
-    engines: {node: '>=16'}
+  /playwright@1.50.1:
+    resolution: {integrity: sha512-G8rwsOQJ63XG6BbKj2w5rHeavFjy5zynBA9zsJMMtBoe/Uf757oG12NXz6e6OirF7RCrTVAKFXbLmn1RbL7Qaw==}
+    engines: {node: '>=18'}
     hasBin: true
     dependencies:
-      playwright-core: 1.41.1
+      playwright-core: 1.50.1
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

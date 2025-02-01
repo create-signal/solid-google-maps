@@ -127,7 +127,7 @@ type MarkerContentProps = ParentProps<{
 
 const MarkerContent: Component<MarkerContentProps> = (props) => {
   return (
-    <div class={props.class} style={props.styles} on:click={props.onClick}>
+    <div class={props.class} style={props.styles} onClick={props.onClick}>
       {props.children}
     </div>
   )
