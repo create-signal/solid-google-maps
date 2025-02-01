@@ -1,6 +1,6 @@
 {
   "name": "solid-google-maps",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SolidJS components and hooks for the Google Maps Javascript API",
   "license": "MIT",
   "main": "./dist/index.js",
